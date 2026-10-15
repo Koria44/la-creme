@@ -8,12 +8,22 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-la-creme-pasteleria-artesanal-demo-secret-key-2026'
+# En producción se define la variable de entorno DJANGO_SECRET_KEY.
+# Sin ella (desarrollo local) se usa la clave demo.
+SECRET_KEY = os.environ.get(
+    'DJANGO_SECRET_KEY',
+    'django-insecure-la-creme-pasteleria-artesanal-demo-secret-key-2026',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# En producción: DJANGO_DEBUG=False. Por defecto True para desarrollo local.
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True').strip().lower() in ('1', 'true', 'yes')
 
-ALLOWED_HOSTS = ['*']
+# En producción: DJANGO_ALLOWED_HOSTS=usuario.pythonanywhere.com (separados por coma).
+ALLOWED_HOSTS = [h.strip() for h in os.environ.get('DJANGO_ALLOWED_HOSTS', '*').split(',') if h.strip()]
+
+# Orígenes HTTPS confiables para formularios (CSRF) derivados de ALLOWED_HOSTS.
+CSRF_TRUSTED_ORIGINS = [f'https://{h.lstrip(".")}' for h in ALLOWED_HOSTS if h != '*']
 
 # Application definition
 INSTALLED_APPS = [
