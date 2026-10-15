@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Recuperar Contraseña | LA CREME Pastelería{% endblock %}
+{% block meta_description %}Recupera el acceso a tu cuenta de cliente en LA CREME Pastelería indicando tu correo electrónico.{% endblock %}
+
+{% block contenido %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card p-4 p-md-5 rounded-4 border-0 shadow-sm bg-white">
+                <div class="text-center mb-4">
+                    <span class="navbar-brand-text fs-2">LA CREME</span>
+                    <h1 class="h4 font-serif mt-2 mb-1">¿Olvidaste tu contraseña?</h1>
+                    <p class="text-muted small">Ingresa tu correo registrado y te enviaremos un enlace seguro para restablecerla.</p>
+                </div>
+
+                <form method="post" action="{% url 'cuentas:recuperar_contrasena' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="id_email" class="form-label fw-semibold small">Correo Electrónico Registrado</label>
+                        <input type="email" name="email" id="id_email" class="form-control" placeholder="tu@correo.cl" required>
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-pasteleria py-3">
+                            <i class="bi bi-envelope-paper me-1"></i> Enviar Enlace de Recuperación
+                        </button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-4 pt-3 border-top">
+                    <a href="{% url 'cuentas:ingresar' %}" class="small text-muted fw-bold">
+                        &larr; Volver a Iniciar Sesión
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

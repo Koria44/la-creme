@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Ubicación y Horarios | LA CREME Pastelería en Providencia{% endblock %}
+{% block meta_description %}Visita nuestra pastelería en Providencia, Santiago. Conoce nuestros horarios de atención, dirección exacta, mapa interactivo y botón de cómo llegar.{% endblock %}
+
+{% block contenido %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-lacreme">
+            <li class="breadcrumb-item"><a href="{% url 'sitio:inicio' %}">Inicio</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Ubicación y Horarios</li>
+        </ol>
+    </nav>
+
+    <div class="text-center mb-5">
+        <span class="text-uppercase fw-bold text-muted small">Encuéntranos en Santiago</span>
+        <h1 class="display-6 mt-1 mb-2">Ubicación y Horarios de Atención</h1>
+        <p class="text-muted mx-auto" style="max-width: 650px;">
+            Te invitamos a visitarnos para retirar tus pedidos en línea o disfrutar de la selección diaria de tortas y pasteles disponibles en vitrina.
+        </p>
+    </div>
+
+    <div class="row g-4 align-items-stretch">
+        <!-- Tarjeta de Información -->
+        <div class="col-lg-5">
+            <div class="card h-100 border-0 p-4 shadow-sm rounded-4" style="background-color: #FFFFFF; border: 1px solid var(--color-borde) !important;">
+                <h2 class="h4 mb-4 font-serif text-dark"><i class="bi bi-shop me-2 text-warning"></i> Datos del Local</h2>
+
+                <div class="mb-4">
+                    <h3 class="h6 fw-bold text-muted text-uppercase small mb-1">Dirección</h3>
+                    <p class="fs-5 fw-bold text-dark mb-0">
+                        {{ configuracion_sitio.direccion|default:"Av. Providencia 1234, Local 5" }}
+                    </p>
+                    <p class="text-muted small mb-0">{{ configuracion_sitio.comuna|default:"Providencia" }}, {{ configuracion_sitio.ciudad|default:"Santiago" }}</p>
+                    <small class="badge bg-light text-muted border mt-2">Nota: Dirección demo editable desde el panel</small>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="h6 fw-bold text-muted text-uppercase small mb-1">Horarios de Atención</h3>
+                    <p class="text-dark mb-0 fw-semibold">
+                        {{ configuracion_sitio.horarios|default:"Lunes a Sábado: 09:30 a 20:00 hrs. / Domingos y festivos: 10:00 a 18:00 hrs."|linebreaksbr }}
+                    </p>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="h6 fw-bold text-muted text-uppercase small mb-1">Teléfonos y WhatsApp</h3>
+                    <p class="mb-1 text-dark">
+                        <i class="bi bi-telephone me-2 text-primary"></i> <strong>{{ configuracion_sitio.telefono|default:"+56 9 8765 4321" }}</strong>
+                    </p>
+                    <p class="mb-0 text-dark">
+                        <i class="bi bi-whatsapp me-2 text-success"></i> <strong>{{ configuracion_sitio.whatsapp|default:"+56987654321" }}</strong>
+                    </p>
+                </div>
+
+                <div class="d-grid gap-2 mt-auto">
+                    <a href="https://maps.google.com/?q={{ configuracion_sitio.latitud|default:'-33.4285' }},{{ configuracion_sitio.longitud|default:'-70.6123' }}" target="_blank" rel="noopener noreferrer" class="btn btn-pasteleria py-3">
+                        <i class="bi bi-geo-alt-fill me-1"></i> Cómo Llegar (Google Maps)
+                    </a>
+                    <a href="https://wa.me/{{ configuracion_sitio.whatsapp|default:'+56987654321'|cut:'+'|cut:' '|cut:'-' }}" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp py-3">
+                        <i class="bi bi-whatsapp me-1"></i> Consultar por WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mapa interactivo y formulario rápido -->
+        <div class="col-lg-7 d-flex flex-column">
+            <div class="ratio ratio-16x9 rounded-4 shadow-sm overflow-hidden border mb-4">
+                <iframe 
+                    src="https://maps.google.com/maps?q={{ configuracion_sitio.latitud|default:'-33.4285' }},{{ configuracion_sitio.longitud|default:'-70.6123' }}&hl=es&z=15&output=embed" 
+                    title="Ubicación de LA CREME en Google Maps" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy">
+                </iframe>
+            </div>
+
+            <!-- Caja rápida de contacto -->
+            <div class="p-4 bg-white rounded-4 border shadow-sm mt-auto">
+                <h2 class="h5 font-serif mb-2">¿Tienes una consulta antes de visitarnos?</h2>
+                <p class="text-muted small mb-3">
+                    Escríbenos directamente y responderemos a la brevedad tus consultas de disponibilidad o cotizaciones especiales.
+                </p>
+                <a href="{% url 'sitio:contacto' %}" class="btn btn-pasteleria-outline btn-sm px-4">
+                    <i class="bi bi-chat-left-dots me-1"></i> Ir al Formulario de Contacto
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

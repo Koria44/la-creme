@@ -1,0 +1,57 @@
+{% extends "panel/base_panel.html" %}
+{% load humanize %}
+
+{% block title %}Clientes Registrados | Panel LA CREME{% endblock %}
+
+{% block contenido_panel %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 font-serif mb-1">Clientes Registrados</h1>
+        <p class="text-muted small mb-0">Base de usuarios registrados, historial de pedidos e información de contacto</p>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4">
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-3 py-3">Cliente</th>
+                    <th class="py-3">Correo</th>
+                    <th class="py-3">Teléfono</th>
+                    <th class="py-3">Comuna</th>
+                    <th class="py-3 text-center">Total Pedidos</th>
+                    <th class="py-3 text-end">Total Gastado</th>
+                    <th class="py-3 pe-3">Fecha Registro</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cliente in clientes %}
+                <tr>
+                    <td class="ps-3 py-3">
+                        <strong class="text-dark">{{ cliente.get_full_name|default:cliente.username }}</strong>
+                        <small class="text-muted d-block">@{{ cliente.username }}</small>
+                    </td>
+                    <td><a href="mailto:{{ cliente.email }}" class="text-decoration-none">{{ cliente.email }}</a></td>
+                    <td>{{ cliente.perfil.telefono|default:"-" }}</td>
+                    <td>{{ cliente.perfil.comuna|default:"-" }}</td>
+                    <td class="text-center">
+                        <span class="badge bg-light text-dark border fs-6 px-3">{{ cliente.total_pedidos }}</span>
+                    </td>
+                    <td class="text-end fw-bold text-dark">
+                        ${{ cliente.total_gastado|default:0|intcomma }} CLP
+                    </td>
+                    <td class="pe-3 small text-muted">{{ cliente.date_joined|date:"d/m/Y" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-4 text-muted">No se registran clientes aún.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% include "includes/_paginacion.html" %}
+{% endblock %}

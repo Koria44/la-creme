@@ -1,0 +1,106 @@
+{% extends "panel/base_panel.html" %}
+
+{% block title %}Configuración del Sitio | Panel LA CREME{% endblock %}
+
+{% block contenido_panel %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 font-serif mb-1">Configuración General de la Pastelería</h1>
+        <p class="text-muted small mb-0">Modifica los datos de contacto, dirección, horarios, redes sociales y tarifas de despacho</p>
+    </div>
+</div>
+
+<div class="card p-4 p-md-5 rounded-4 border-0 shadow-sm bg-white">
+    <div class="alert alert-info py-2 px-3 small rounded-3 mb-4">
+        <i class="bi bi-info-circle-fill me-1"></i>
+        <strong>Nota importante:</strong> Los cambios realizados en este formulario se reflejarán de inmediato en el pie de página, barra superior, página de ubicación y metadatos SEO de toda la tienda.
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label for="{{ form.nombre.id_for_label }}" class="form-label fw-semibold small">Nombre de la Pastelería *</label>
+                {{ form.nombre }}
+            </div>
+
+            <div class="col-md-6">
+                <label for="{{ form.correo.id_for_label }}" class="form-label fw-semibold small">Correo Electrónico de Contacto *</label>
+                {{ form.correo }}
+            </div>
+
+            <div class="col-12">
+                <label for="{{ form.eslogan.id_for_label }}" class="form-label fw-semibold small">Eslogan o Frase Representativa</label>
+                {{ form.eslogan }}
+            </div>
+
+            <div class="col-md-8">
+                <label for="{{ form.direccion.id_for_label }}" class="form-label fw-semibold small">Dirección Física (Calle y Número) *</label>
+                {{ form.direccion }}
+            </div>
+
+            <div class="col-md-4">
+                <label for="{{ form.comuna.id_for_label }}" class="form-label fw-semibold small">Comuna *</label>
+                {{ form.comuna }}
+            </div>
+
+            <div class="col-md-4">
+                <label for="{{ form.ciudad.id_for_label }}" class="form-label fw-semibold small">Ciudad *</label>
+                {{ form.ciudad }}
+            </div>
+
+            <div class="col-md-4">
+                <label for="{{ form.telefono.id_for_label }}" class="form-label fw-semibold small">Teléfono de Contacto *</label>
+                {{ form.telefono }}
+            </div>
+
+            <div class="col-md-4">
+                <label for="{{ form.whatsapp.id_for_label }}" class="form-label fw-semibold small">Número de WhatsApp (con código país, ej: +56987654321) *</label>
+                {{ form.whatsapp }}
+            </div>
+
+            <div class="col-12">
+                <label for="{{ form.horarios.id_for_label }}" class="form-label fw-semibold small">Horarios de Atención al Público *</label>
+                {{ form.horarios }}
+            </div>
+
+            <div class="col-md-6">
+                <label for="{{ form.instagram.id_for_label }}" class="form-label fw-semibold small">Enlace de Instagram</label>
+                {{ form.instagram }}
+            </div>
+
+            <div class="col-md-6">
+                <label for="{{ form.facebook.id_for_label }}" class="form-label fw-semibold small">Enlace de Facebook</label>
+                {{ form.facebook }}
+            </div>
+
+            <div class="col-md-3 col-6">
+                <label for="{{ form.latitud.id_for_label }}" class="form-label fw-semibold small">Latitud (Google Maps)</label>
+                {{ form.latitud }}
+            </div>
+
+            <div class="col-md-3 col-6">
+                <label for="{{ form.longitud.id_for_label }}" class="form-label fw-semibold small">Longitud (Google Maps)</label>
+                {{ form.longitud }}
+            </div>
+
+            <div class="col-md-3 col-6">
+                <label for="{{ form.costo_despacho_base.id_for_label }}" class="form-label fw-semibold small">Costo Base Despacho (CLP)</label>
+                {{ form.costo_despacho_base }}
+            </div>
+
+            <div class="col-md-3 col-6">
+                <label for="{{ form.despacho_gratis_desde.id_for_label }}" class="form-label fw-semibold small">Despacho Gratis Desde (CLP)</label>
+                {{ form.despacho_gratis_desde }}
+            </div>
+
+            <div class="col-12 mt-4 pt-3 border-top text-end">
+                <button type="submit" class="btn btn-pasteleria px-5 py-2">
+                    <i class="bi bi-save me-1"></i> Guardar Configuración
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

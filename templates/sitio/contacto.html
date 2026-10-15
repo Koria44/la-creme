@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}Contacto y Cotizaciones | LA CREME Pastelería{% endblock %}
+{% block meta_description %}Ponte en contacto con LA CREME. Solicita cotizaciones para tortas de matrimonio, cumpleaños o eventos especiales en Santiago. Responderemos hoy mismo.{% endblock %}
+
+{% block contenido %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-lacreme">
+            <li class="breadcrumb-item"><a href="{% url 'sitio:inicio' %}">Inicio</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Contacto y Cotizaciones</li>
+        </ol>
+    </nav>
+
+    <div class="text-center mb-5">
+        <span class="text-uppercase fw-bold text-muted small">Conversemos</span>
+        <h1 class="display-6 mt-1 mb-2">Contacto y Cotizaciones Especiales</h1>
+        <p class="text-muted mx-auto" style="max-width: 650px;">
+            ¿Planeas un cumpleaños, matrimonio, bautizo o evento corporativo? Cuéntanos tu idea y prepararemos una propuesta dulce y personalizada a tu medida.
+        </p>
+    </div>
+
+    <div class="row g-5">
+        <!-- Formulario de Contacto -->
+        <div class="col-lg-7">
+            <div class="p-4 p-md-5 bg-white rounded-4 shadow-sm border">
+                <h2 class="h4 font-serif mb-4 text-dark">Envíanos un mensaje</h2>
+
+                <form method="post" action="{% url 'sitio:contacto' %}" novalidate>
+                    {% csrf_token %}
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.nombre.id_for_label }}" class="form-label fw-semibold">Nombre y Apellido *</label>
+                            {{ form.nombre }}
+                            {% if form.nombre.errors %}
+                                <div class="text-danger small mt-1">{{ form.nombre.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.correo.id_for_label }}" class="form-label fw-semibold">Correo Electrónico *</label>
+                            {{ form.correo }}
+                            {% if form.correo.errors %}
+                                <div class="text-danger small mt-1">{{ form.correo.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.telefono.id_for_label }}" class="form-label fw-semibold">Teléfono / WhatsApp</label>
+                            {{ form.telefono }}
+                            {% if form.telefono.errors %}
+                                <div class="text-danger small mt-1">{{ form.telefono.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.asunto.id_for_label }}" class="form-label fw-semibold">Asunto *</label>
+                            {{ form.asunto }}
+                            {% if form.asunto.errors %}
+                                <div class="text-danger small mt-1">{{ form.asunto.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-12">
+                            <label for="{{ form.mensaje.id_for_label }}" class="form-label fw-semibold">Detalle de tu consulta o evento *</label>
+                            {{ form.mensaje }}
+                            {% if form.mensaje.errors %}
+                                <div class="text-danger small mt-1">{{ form.mensaje.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-pasteleria py-3 px-4 w-100 fs-6">
+                                <i class="bi bi-send me-1"></i> Enviar Mensaje
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Información de Contacto Directo -->
+        <div class="col-lg-5">
+            <div class="p-4 bg-white rounded-4 border shadow-sm h-100 d-flex flex-column">
+                <h2 class="h4 font-serif mb-4 text-dark">Canales Directos</h2>
+
+                <div class="mb-4 d-flex align-items-start gap-3">
+                    <div class="fs-3 text-success">
+                        <i class="bi bi-whatsapp"></i>
+                    </div>
+                    <div>
+                        <h3 class="h6 fw-bold mb-1">WhatsApp de Atención Rápida</h3>
+                        <p class="text-muted small mb-2">Para consultas urgentes de stock o pedidos del día.</p>
+                        <a href="https://wa.me/{{ configuracion_sitio.whatsapp|default:'+56987654321'|cut:'+'|cut:' '|cut:'-' }}" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm">
+                            Chatear en WhatsApp
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mb-4 d-flex align-items-start gap-3">
+                    <div class="fs-3" style="color: var(--color-chocolate);">
+                        <i class="bi bi-telephone"></i>
+                    </div>
+                    <div>
+                        <h3 class="h6 fw-bold mb-1">Teléfono</h3>
+                        <p class="text-muted small mb-0">{{ configuracion_sitio.telefono|default:"+56 9 8765 4321" }}</p>
+                    </div>
+                </div>
+
+                <div class="mb-4 d-flex align-items-start gap-3">
+                    <div class="fs-3" style="color: var(--color-frambuesa);">
+                        <i class="bi bi-envelope"></i>
+                    </div>
+                    <div>
+                        <h3 class="h6 fw-bold mb-1">Correo Electrónico</h3>
+                        <p class="text-muted small mb-0">{{ configuracion_sitio.correo|default:"contacto@pastelerialacreme.cl" }}</p>
+                    </div>
+                </div>
+
+                <div class="mt-auto p-3 rounded-3" style="background-color: var(--color-crema);">
+                    <h3 class="h6 fw-bold text-dark mb-1"><i class="bi bi-clock me-1 text-warning"></i> Horarios de Respuesta</h3>
+                    <p class="small text-muted mb-0">
+                        Respondemos mensajes y cotizaciones de Lunes a Sábado de 09:30 a 20:00 hrs.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,268 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Finalizar Compra | LA CREME Pastelería{% endblock %}
+{% block meta_description %}Completa tus datos de entrega y método de pago para confirmar tu pedido en LA CREME. Despacho a domicilio o retiro en Providencia.{% endblock %}
+
+{% block contenido %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-lacreme">
+            <li class="breadcrumb-item"><a href="{% url 'sitio:inicio' %}">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'carrito:detalle' %}">Carrito</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Finalizar Compra</li>
+        </ol>
+    </nav>
+
+    <div class="mb-4">
+        <span class="text-uppercase fw-bold text-muted small">Paso Final</span>
+        <h1 class="display-6 font-serif mb-1">Finalizar Compra</h1>
+        <p class="text-muted small">Ingresa tus datos para coordinar la entrega o retiro de tus productos.</p>
+    </div>
+
+    {% if not request.user.is_authenticated %}
+    <div class="alert alert-light border shadow-sm rounded-4 d-flex align-items-center justify-content-between p-3 mb-4">
+        <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-person-check fs-4 text-primary"></i>
+            <div>
+                <strong class="d-block text-dark">¿Ya tienes cuenta en LA CREME?</strong>
+                <small class="text-muted">Inicia sesión para autocompletar tus datos y acumular historial de pedidos.</small>
+            </div>
+        </div>
+        <a href="{% url 'cuentas:ingresar' %}?next={% url 'pedidos:checkout' %}" class="btn btn-outline-secondary btn-sm rounded-pill px-3 text-nowrap">
+            Iniciar Sesión
+        </a>
+    </div>
+    {% endif %}
+
+    <form method="post" action="{% url 'pedidos:checkout' %}" id="form-checkout" novalidate>
+        {% csrf_token %}
+
+        <div class="row g-4">
+            <!-- Columna Izquierda: Datos del Cliente y Entrega -->
+            <div class="col-lg-7">
+                <!-- 1. Datos Personales -->
+                <div class="card p-4 rounded-4 border shadow-sm mb-4 bg-white">
+                    <h2 class="h5 font-serif mb-3 text-dark pb-2 border-bottom">
+                        <i class="bi bi-person-lines-fill text-warning me-2"></i> 1. Tus Datos de Contacto
+                    </h2>
+
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label for="{{ form.nombre.id_for_label }}" class="form-label fw-semibold">Nombre y Apellido *</label>
+                            {{ form.nombre }}
+                            {% if form.nombre.errors %}
+                                <div class="text-danger small mt-1">{{ form.nombre.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.correo.id_for_label }}" class="form-label fw-semibold">Correo Electrónico *</label>
+                            {{ form.correo }}
+                            {% if form.correo.errors %}
+                                <div class="text-danger small mt-1">{{ form.correo.errors.0 }}</div>
+                            {% endif %}
+                            <small class="text-muted">Enviaremos tu comprobante a este correo.</small>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.telefono.id_for_label }}" class="form-label fw-semibold">Teléfono / WhatsApp *</label>
+                            {{ form.telefono }}
+                            {% if form.telefono.errors %}
+                                <div class="text-danger small mt-1">{{ form.telefono.errors.0 }}</div>
+                            {% endif %}
+                            <small class="text-muted">Para avisarte cuando tu pedido esté listo.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Modalidad y Fecha de Entrega -->
+                <div class="card p-4 rounded-4 border shadow-sm mb-4 bg-white">
+                    <h2 class="h5 font-serif mb-3 text-dark pb-2 border-bottom">
+                        <i class="bi bi-calendar2-check text-warning me-2"></i> 2. Modalidad y Programación
+                    </h2>
+
+                    <!-- Selector de Entrega -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold mb-2">Modalidad de entrega *</label>
+                        <div class="d-flex flex-column gap-2">
+                            {% for radio in form.tipo_entrega %}
+                            <div class="form-check p-3 rounded-3 border" style="background-color: var(--color-crema);">
+                                {{ radio.tag }}
+                                <label class="form-check-label fw-bold text-dark ms-2" for="{{ radio.id_for_label }}">
+                                    {{ radio.choice_label }}
+                                </label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% if form.tipo_entrega.errors %}
+                            <div class="text-danger small mt-1">{{ form.tipo_entrega.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Campos de Dirección (Se muestran con toggle según la modalidad) -->
+                    <div id="contenedor-despacho" class="row g-3 mb-4 p-3 bg-light rounded-3 border">
+                        <div class="col-12">
+                            <label for="{{ form.direccion.id_for_label }}" class="form-label fw-semibold">Dirección de Despacho (Calle, número y dpto) *</label>
+                            {{ form.direccion }}
+                            {% if form.direccion.errors %}
+                                <div class="text-danger small mt-1">{{ form.direccion.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-12">
+                            <label for="{{ form.comuna.id_for_label }}" class="form-label fw-semibold">Comuna *</label>
+                            {{ form.comuna }}
+                            {% if form.comuna.errors %}
+                                <div class="text-danger small mt-1">{{ form.comuna.errors.0 }}</div>
+                            {% endif %}
+                            <small class="text-muted">Despachos disponibles en Providencia, Las Condes, Vitacura, Ñuñoa, La Reina, etc.</small>
+                        </div>
+                    </div>
+
+                    <!-- Fecha y Rango Horario -->
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.fecha_entrega.id_for_label }}" class="form-label fw-semibold">Fecha Requerida *</label>
+                            {{ form.fecha_entrega }}
+                            {% if form.fecha_entrega.errors %}
+                                <div class="text-danger small mt-1">{{ form.fecha_entrega.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.hora_entrega.id_for_label }}" class="form-label fw-semibold">Rango Horario Preferido</label>
+                            {{ form.hora_entrega }}
+                            {% if form.hora_entrega.errors %}
+                                <div class="text-danger small mt-1">{{ form.hora_entrega.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-12">
+                            <label for="{{ form.notas.id_for_label }}" class="form-label fw-semibold">Instrucciones Especiales / Dedicatoria</label>
+                            {{ form.notas }}
+                            {% if form.notas.errors %}
+                                <div class="text-danger small mt-1">{{ form.notas.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Método de Pago -->
+                <div class="card p-4 rounded-4 border shadow-sm mb-4 bg-white">
+                    <h2 class="h5 font-serif mb-3 text-dark pb-2 border-bottom">
+                        <i class="bi bi-wallet2 text-warning me-2"></i> 3. Forma de Pago
+                    </h2>
+
+                    <div class="d-flex flex-column gap-2 mb-3">
+                        {% for radio in form.metodo_pago %}
+                        <div class="form-check p-3 rounded-3 border" style="background-color: var(--color-crema);">
+                            {{ radio.tag }}
+                            <label class="form-check-label fw-bold text-dark ms-2" for="{{ radio.id_for_label }}">
+                                {{ radio.choice_label }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% if form.metodo_pago.errors %}
+                        <div class="text-danger small mt-1">{{ form.metodo_pago.errors.0 }}</div>
+                    {% endif %}
+
+                    <small class="text-muted d-block mt-2">
+                        * Si eliges transferencia, te mostraremos los datos bancarios al confirmar y los enviaremos a tu correo.
+                    </small>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Resumen de Compra -->
+            <div class="col-lg-5">
+                <div class="card-resumen sticky-top" style="top: 90px;">
+                    <h2 class="h5 font-serif mb-3 text-dark pb-2 border-bottom">Detalle de tu Compra</h2>
+
+                    <!-- Lista de ítems -->
+                    <div class="mb-3" style="max-height: 280px; overflow-y: auto;">
+                        {% for item in carrito %}
+                        <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-secondary rounded-pill">{{ item.cantidad }}x</span>
+                                <div>
+                                    <strong class="d-block text-dark small">{{ item.producto.nombre }}</strong>
+                                    <small class="text-muted">${{ item.precio|intcomma }} c/u</small>
+                                </div>
+                            </div>
+                            <span class="fw-bold text-dark small">${{ item.subtotal|intcomma }} CLP</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Totales -->
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Subtotal productos:</span>
+                        <strong class="text-dark">${{ carrito.get_total_precio|intcomma }} CLP</strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="text-muted">Despacho estimado:</span>
+                        <span id="label-costo-despacho" class="fw-semibold text-dark">
+                            {% if carrito.get_total_precio >= configuracion.despacho_gratis_desde %}
+                                <span class="badge bg-success">Gratis</span>
+                            {% else %}
+                                ${{ configuracion.costo_despacho_base|intcomma }} CLP
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    <hr class="my-3">
+
+                    <div class="d-flex justify-content-between align-items-baseline mb-4">
+                        <span class="fs-5 fw-bold text-dark">Total a pagar:</span>
+                        <span class="fs-4 fw-bold" style="color: var(--color-frambuesa);" id="label-total-general">
+                            ${{ carrito.get_total_precio|intcomma }} CLP
+                        </span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-pasteleria py-3 fs-6" id="btn-confirmar-pedido">
+                            <i class="bi bi-check-circle-fill me-1"></i> Confirmar y Realizar Pedido
+                        </button>
+                        <a href="{% url 'carrito:detalle' %}" class="btn btn-outline-secondary btn-sm rounded-pill mt-2">
+                            <i class="bi bi-pencil me-1"></i> Modificar productos del carrito
+                        </a>
+                    </div>
+
+                    <div class="mt-4 p-3 rounded-3 text-center" style="background-color: var(--color-crema);">
+                        <small class="text-muted d-block mb-1">
+                            <i class="bi bi-info-circle text-primary me-1"></i>
+                            <strong>Atención:</strong> En modo demostración no se cobran fondos reales.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const radiosTipoEntrega = document.querySelectorAll('input[name="tipo_entrega"]');
+    const contenedorDespacho = document.getElementById('contenedor-despacho');
+
+    function actualizarVisibilidadDespacho() {
+        const seleccion = document.querySelector('input[name="tipo_entrega"]:checked')?.value;
+        if (seleccion === 'retiro') {
+            if (contenedorDespacho) contenedorDespacho.classList.add('d-none');
+        } else {
+            if (contenedorDespacho) contenedorDespacho.classList.remove('d-none');
+        }
+    }
+
+    radiosTipoEntrega.forEach(radio => {
+        radio.addEventListener('change', actualizarVisibilidadDespacho);
+    });
+    actualizarVisibilidadDespacho();
+});
+</script>
+{% endblock %}

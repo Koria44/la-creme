@@ -1,0 +1,226 @@
+{% extends "panel/base_panel.html" %}
+{% load humanize %}
+
+{% block title %}Dashboard | Panel LA CREME{% endblock %}
+
+{% block contenido_panel %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 font-serif mb-1">Dashboard de Gestión</h1>
+        <p class="text-muted small mb-0">Resumen operativo y comercial de Pastelería LA CREME</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{% url 'panel:producto_crear' %}" class="btn btn-pasteleria btn-sm">
+            <i class="bi bi-plus-circle me-1"></i> Nuevo Producto
+        </a>
+        <a href="{% url 'panel:pedidos' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-receipt me-1"></i> Ver Pedidos
+        </a>
+    </div>
+</div>
+
+<!-- 1. Tarjetas KPI -->
+<div class="row g-3 mb-4">
+    <!-- Ventas Hoy -->
+    <div class="col-sm-6 col-xl">
+        <div class="kpi-card h-100">
+            <i class="bi bi-cash-coin kpi-icon"></i>
+            <span class="text-muted small fw-bold text-uppercase d-block mb-1">Ventas Hoy</span>
+            <div class="kpi-val text-success">${{ ventas_hoy|intcomma }}</div>
+            <small class="text-muted">Pedidos del día</small>
+        </div>
+    </div>
+
+    <!-- Ventas del Mes -->
+    <div class="col-sm-6 col-xl">
+        <div class="kpi-card h-100">
+            <i class="bi bi-calendar-check kpi-icon"></i>
+            <span class="text-muted small fw-bold text-uppercase d-block mb-1">Ventas del Mes</span>
+            <div class="kpi-val" style="color: var(--color-chocolate);">${{ ventas_mes|intcomma }}</div>
+            <small class="text-muted">Acumulado mensual</small>
+        </div>
+    </div>
+
+    <!-- Pedidos Pendientes -->
+    <div class="col-sm-6 col-xl">
+        <div class="kpi-card h-100">
+            <i class="bi bi-hourglass-split kpi-icon"></i>
+            <span class="text-muted small fw-bold text-uppercase d-block mb-1">Pendientes</span>
+            <div class="kpi-val text-warning">{{ pedidos_pendientes_cant }}</div>
+            <small class="text-muted">Por confirmar / preparar</small>
+        </div>
+    </div>
+
+    <!-- Stock Bajo / Crítico -->
+    <div class="col-sm-6 col-xl">
+        <div class="kpi-card h-100">
+            <i class="bi bi-exclamation-triangle kpi-icon"></i>
+            <span class="text-muted small fw-bold text-uppercase d-block mb-1">Stock Bajo</span>
+            <div class="kpi-val {% if productos_stock_bajo_cant > 0 %}text-danger{% else %}text-muted{% endif %}">
+                {{ productos_stock_bajo_cant }}
+            </div>
+            <small class="text-muted"><a href="{% url 'panel:stock' %}" class="text-danger fw-bold">Ver alertas &rarr;</a></small>
+        </div>
+    </div>
+
+    <!-- Nuevos Clientes -->
+    <div class="col-sm-6 col-xl">
+        <div class="kpi-card h-100">
+            <i class="bi bi-person-plus kpi-icon"></i>
+            <span class="text-muted small fw-bold text-uppercase d-block mb-1">Nuevos Clientes</span>
+            <div class="kpi-val text-info">{{ nuevos_clientes_cant }}</div>
+            <small class="text-muted">Registrados este mes</small>
+        </div>
+    </div>
+</div>
+
+<!-- 2. Gráfico de Ventas de los últimos 30 días y Productos Más Vendidos -->
+<div class="row g-4 mb-4">
+    <!-- Gráfico 30 días -->
+    <div class="col-lg-8">
+        <div class="card p-4 rounded-4 border-0 shadow-sm bg-white h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 class="h5 font-serif mb-0 text-dark">Evolución de Ventas (Últimos 30 días)</h2>
+                <span class="badge bg-light text-dark border">En CLP</span>
+            </div>
+            <div style="position: relative; height: 300px; width: 100%;">
+                <canvas id="graficoVentas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Productos Más Vendidos -->
+    <div class="col-lg-4">
+        <div class="card p-4 rounded-4 border-0 shadow-sm bg-white h-100">
+            <h2 class="h5 font-serif mb-3 text-dark pb-2 border-bottom">Más Vendidos</h2>
+            {% if top_productos %}
+                <ul class="list-group list-group-flush">
+                    {% for p in top_productos %}
+                    <li class="list-group-item px-0 py-2 d-flex justify-content-between align-items-center">
+                        <div class="text-truncate me-2">
+                            <strong class="small text-dark d-block text-truncate">{{ p.nombre_producto }}</strong>
+                            <small class="text-muted">${{ p.total_recaudado|intcomma }} recaudados</small>
+                        </div>
+                        <span class="badge bg-secondary rounded-pill">{{ p.total_unidades }} un.</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted small">No hay suficientes datos de ventas confirmadas aún.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- 3. Tabla de Últimos Pedidos -->
+<div class="card p-4 rounded-4 border-0 shadow-sm bg-white">
+    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+        <h2 class="h5 font-serif mb-0 text-dark">Últimos Pedidos Recibidos</h2>
+        <a href="{% url 'panel:pedidos' %}" class="small fw-bold">Ver todos los pedidos &rarr;</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>N° Pedido</th>
+                    <th>Cliente</th>
+                    <th>Fecha Entrega</th>
+                    <th>Modalidad</th>
+                    <th class="text-center">Estado</th>
+                    <th class="text-end">Total</th>
+                    <th class="text-center">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ped in ultimos_pedidos %}
+                <tr>
+                    <td><strong>#{{ ped.id|stringformat:"05d" }}</strong></td>
+                    <td>
+                        <span class="fw-bold d-block">{{ ped.nombre }}</span>
+                        <small class="text-muted">{{ ped.telefono }}</small>
+                    </td>
+                    <td class="small">
+                        {{ ped.fecha_entrega|date:"d/m/Y" }}<br>
+                        <span class="text-muted">{{ ped.hora_entrega }}</span>
+                    </td>
+                    <td class="small">{{ ped.get_tipo_entrega_display }}</td>
+                    <td class="text-center">
+                        <span class="badge bg-{{ ped.badge_class }} py-2 px-3">
+                            {{ ped.get_estado_display }}
+                        </span>
+                    </td>
+                    <td class="text-end fw-bold text-dark">${{ ped.total_con_envio|intcomma }} CLP</td>
+                    <td class="text-center">
+                        <a href="{% url 'panel:pedido_detalle' ped.id %}" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                            Gestionar
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-4 text-muted">No se registran pedidos aún.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const ctx = document.getElementById('graficoVentas');
+    if (!ctx) return;
+
+    const fechas = JSON.parse('{{ fechas_grafico_json|escapejs }}');
+    const ventas = JSON.parse('{{ ventas_grafico_json|escapejs }}');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: fechas,
+            datasets: [{
+                label: 'Ventas Diarias (CLP)',
+                data: ventas,
+                borderColor: '#B83A5C',
+                backgroundColor: 'rgba(184, 58, 92, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.3,
+                pointBackgroundColor: '#4A2C2A',
+                pointRadius: 3,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            return '$' + Number(context.raw).toLocaleString('es-CL') + ' CLP';
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function (value) {
+                            return '$' + Number(value).toLocaleString('es-CL');
+                        }
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

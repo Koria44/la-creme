@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Detalle de Pedido #{{ pedido.id|stringformat:"05d" }} | LA CREME{% endblock %}
+{% block meta_description %}Detalle del pedido #{{ pedido.id|stringformat:"05d" }} en LA CREME Pastelería.{% endblock %}
+
+{% block contenido %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-lacreme">
+            <li class="breadcrumb-item"><a href="{% url 'sitio:inicio' %}">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'cuentas:mis_pedidos' %}">Mis Pedidos</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Pedido #{{ pedido.id|stringformat:"05d" }}</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <div>
+            <h1 class="display-6 font-serif mb-0">Pedido #{{ pedido.id|stringformat:"05d" }}</h1>
+            <span class="badge bg-{{ pedido.badge_class }} fs-6 mt-1">{{ pedido.get_estado_display }}</span>
+        </div>
+        <a href="{% url 'cuentas:mis_pedidos' %}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+            <i class="bi bi-arrow-left me-1"></i> Volver al listado
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <!-- Detalle de Productos -->
+        <div class="col-lg-8">
+            <div class="card p-4 rounded-4 border-0 shadow-sm bg-white mb-4">
+                <h2 class="h5 font-serif mb-3 text-dark pb-2 border-bottom">Productos del Pedido</h2>
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Producto</th>
+                                <th class="text-center">Cant.</th>
+                                <th class="text-end">Unitario</th>
+                                <th class="text-end">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in pedido.items.all %}
+                            <tr>
+                                <td>
+                                    <strong>{{ item.nombre_producto }}</strong>
+                                </td>
+                                <td class="text-center">{{ item.cantidad }}</td>
+                                <td class="text-end">${{ item.precio_unitario|intcomma }} CLP</td>
+                                <td class="text-end fw-bold">${{ item.subtotal|intcomma }} CLP</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end text-muted">Subtotal productos:</td>
+                                <td class="text-end fw-semibold">${{ pedido.total|intcomma }} CLP</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-end text-muted">Costo despacho:</td>
+                                <td class="text-end fw-semibold">${{ pedido.costo_envio|intcomma }} CLP</td>
+                            </tr>
+                            <tr class="fs-5">
+                                <td colspan="3" class="text-end fw-bold text-dark">Total:</td>
+                                <td class="text-end fw-bold" style="color: var(--color-frambuesa);">${{ pedido.total_con_envio|intcomma }} CLP</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            {% if pedido.notas %}
+            <div class="card p-4 rounded-4 border-0 shadow-sm bg-white">
+                <h3 class="h6 font-serif mb-2 text-dark">Instrucciones o Dedicatoria:</h3>
+                <p class="text-muted small mb-0">{{ pedido.notas }}</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Información de Entrega y Pago -->
+        <div class="col-lg-4">
+            <div class="card p-4 rounded-4 border-0 shadow-sm bg-white mb-4">
+                <h2 class="h6 font-serif mb-3 text-dark pb-2 border-bottom">Información de Entrega</h2>
+                <ul class="list-unstyled small text-muted mb-0">
+                    <li class="mb-2"><strong>Modalidad:</strong> {{ pedido.get_tipo_entrega_display }}</li>
+                    {% if pedido.tipo_entrega == 'despacho' %}
+                    <li class="mb-2"><strong>Dirección:</strong> {{ pedido.direccion }}, {{ pedido.comuna }}</li>
+                    {% endif %}
+                    <li class="mb-2"><strong>Fecha requerida:</strong> {{ pedido.fecha_entrega|date:"d/m/Y" }}</li>
+                    <li class="mb-2"><strong>Horario:</strong> {{ pedido.hora_entrega }}</li>
+                    <li class="mb-2"><strong>Destinatario:</strong> {{ pedido.nombre }}</li>
+                    <li class="mb-0"><strong>Teléfono:</strong> {{ pedido.telefono }}</li>
+                </ul>
+            </div>
+
+            <div class="card p-4 rounded-4 border-0 shadow-sm bg-white">
+                <h2 class="h6 font-serif mb-3 text-dark pb-2 border-bottom">Pago</h2>
+                <ul class="list-unstyled small text-muted mb-0">
+                    <li class="mb-2"><strong>Método de pago:</strong> {{ pedido.get_metodo_pago_display }}</li>
+                    <li class="mb-2"><strong>Estado:</strong> <span class="badge bg-{{ pedido.badge_class }}">{{ pedido.get_estado_display }}</span></li>
+                    <li class="mb-0"><strong>Total:</strong> ${{ pedido.total_con_envio|intcomma }} CLP</li>
+                </ul>
+                <div class="mt-4">
+                    <button type="button" class="btn btn-outline-secondary btn-sm w-100 rounded-pill" onclick="window.print();">
+                        <i class="bi bi-printer me-1"></i> Imprimir Comprobante
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

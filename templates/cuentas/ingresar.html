@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Iniciar Sesión | LA CREME Pastelería{% endblock %}
+{% block meta_description %}Ingresa a tu cuenta de cliente en LA CREME Pastelería para revisar tus pedidos anteriores o agilizar tu proceso de compra.{% endblock %}
+
+{% block contenido %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card p-4 p-md-5 rounded-4 border-0 shadow-sm bg-white">
+                <div class="text-center mb-4">
+                    <span class="navbar-brand-text fs-2">LA CREME</span>
+                    <h1 class="h3 font-serif mt-2 mb-1">Iniciar Sesión</h1>
+                    <p class="text-muted small">Ingresa con tus credenciales de cliente o staff</p>
+                </div>
+
+                <!-- Credenciales demo de ayuda para el evaluador -->
+                <div class="alert alert-warning py-2 px-3 small rounded-3 mb-4">
+                    <strong>Credenciales de prueba:</strong><br>
+                    • Cliente: <code>cliente</code> / <code>cliente12345</code><br>
+                    • Administrador: <code>admin</code> / <code>admin12345</code>
+                </div>
+
+                <form method="post" action="{% url 'cuentas:ingresar' %}" novalidate>
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger py-2 small mb-3">
+                        {{ form.non_field_errors.0 }}
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label for="{{ form.username.id_for_label }}" class="form-label fw-semibold small">Usuario</label>
+                        {{ form.username }}
+                        {% if form.username.errors %}<div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>{% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="{{ form.password.id_for_label }}" class="form-label fw-semibold small mb-0">Contraseña</label>
+                            <a href="{% url 'cuentas:recuperar_contrasena' %}" class="small text-muted">¿Olvidaste tu clave?</a>
+                        </div>
+                        {{ form.password }}
+                        {% if form.password.errors %}<div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>{% endif %}
+                    </div>
+
+                    <input type="hidden" name="next" value="{{ request.GET.next|default:'' }}">
+
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-pasteleria py-3">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Entrar
+                        </button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-4 pt-3 border-top">
+                    <p class="small text-muted mb-0">
+                        ¿No tienes una cuenta aún?
+                        <a href="{% url 'cuentas:registro' %}" class="fw-bold">Crea tu cuenta aquí</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

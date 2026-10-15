@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}{{ producto.nombre }} | LA CREME Pastelería Santiago{% endblock %}
+{% block meta_description %}{{ producto.descripcion_corta|truncatechars:155 }}{% endblock %}
+
+{% block og_title %}{{ producto.nombre }} | LA CREME{% endblock %}
+{% block og_description %}{{ producto.descripcion_corta }}{% endblock %}
+{% block og_image %}{% if producto.imagen %}{{ request.scheme }}://{{ request.get_host }}{{ producto.imagen.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
+
+{% block meta_extra %}
+<!-- JSON-LD Estructurado Product + Offer para Google Shopping / Rich Snippets -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org/",
+  "@type": "Product",
+  "name": "{{ producto.nombre|escapejs }}",
+  {% if producto.imagen %}
+  "image": [
+    "{{ request.scheme }}://{{ request.get_host }}{{ producto.imagen.url }}"
+  ],
+  {% endif %}
+  "description": "{{ producto.descripcion_corta|escapejs }}",
+  "sku": "LACREME-{{ producto.id }}",
+  "brand": {
+    "@type": "Brand",
+    "name": "LA CREME Pastelería"
+  },
+  "offers": {
+    "@type": "Offer",
+    "url": "{{ request.build_absolute_uri }}",
+    "priceCurrency": "CLP",
+    "price": "{{ producto.precio_final }}",
+    "priceValidUntil": "2027-12-31",
+    "itemCondition": "https://schema.org/NewCondition",
+    "availability": "{% if producto.disponible %}https://schema.org/InStock{% else %}https://schema.org/OutOfStock{% endif %}",
+    "seller": {
+      "@type": "Organization",
+      "name": "LA CREME Pastelería"
+    }
+  }
+}
+</script>
+
+<!-- JSON-LD BreadcrumbList -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Inicio",
+      "item": "{{ request.scheme }}://{{ request.get_host }}/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "{{ producto.categoria.nombre|escapejs }}",
+      "item": "{{ request.scheme }}://{{ request.get_host }}{{ producto.categoria.get_absolute_url }}"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ producto.nombre|escapejs }}",
+      "item": "{{ request.build_absolute_uri }}"
+    }
+  ]
+}
+</script>
+{% endblock %}
+
+{% block contenido %}
+<div class="container py-4">
+    <!-- Breadcrumb Visible -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-lacreme">
+            <li class="breadcrumb-item"><a href="{% url 'sitio:inicio' %}">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'catalogo:lista' %}">Catálogo</a></li>
+            <li class="breadcrumb-item"><a href="{{ producto.categoria.get_absolute_url }}">{{ producto.categoria.nombre }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ producto.nombre }}</li>
+        </ol>
+    </nav>
+
+    <div class="row g-5 align-items-start">
+        <!-- Columna Izquierda: Imagen del Producto -->
+        <div class="col-lg-6">
+            <div class="ficha-producto-img position-relative shadow">
+                {% if producto.tiene_descuento %}
+                    <span class="badge-descuento fs-6 py-2 px-3">-{{ producto.porcentaje_descuento }}% Dcto</span>
+                {% endif %}
+
+                {% if producto.esta_agotado %}
+                    <span class="badge-agotado fs-6 py-2 px-3">Agotado temporalmente</span>
+                {% elif producto.stock_bajo %}
+                    <span class="badge-stock-bajo fs-6 py-2 px-3">¡Últimas {{ producto.stock }} unidades!</span>
+                {% endif %}
+
+                {% if producto.imagen %}
+                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }} - Pastelería artesanal LA CREME" class="img-fluid w-100" style="max-height: 520px; object-fit: cover;" width="700" height="520" loading="eager">
+                {% else %}
+                    <div class="py-5 text-center text-muted bg-light">
+                        <i class="bi bi-cake2 display-1"></i>
+                        <p class="mt-2">Imagen no disponible</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Columna Derecha: Información y Compra -->
+        <div class="col-lg-6">
+            <a href="{{ producto.categoria.get_absolute_url }}" class="categoria-tag fs-6 mb-2">
+                {{ producto.categoria.nombre }}
+            </a>
+            <h1 class="display-6 font-serif mb-3">{{ producto.nombre }}</h1>
+
+            <!-- Precios -->
+            <div class="d-flex align-items-baseline gap-2 mb-3">
+                {% if producto.tiene_descuento %}
+                    <span class="display-6 fw-bold" style="color: var(--color-frambuesa);">${{ producto.precio_oferta|intcomma }} CLP</span>
+                    <span class="fs-4 text-muted text-decoration-line-through">${{ producto.precio|intcomma }}</span>
+                {% else %}
+                    <span class="display-6 fw-bold" style="color: var(--color-chocolate);">${{ producto.precio|intcomma }} CLP</span>
+                {% endif %}
+            </div>
+
+            <p class="lead text-muted mb-4 fs-6">
+                {{ producto.descripcion_corta }}
+            </p>
+
+            <!-- Badges de Especificaciones -->
+            <div class="mb-4">
+                <span class="ficha-meta-badge">
+                    <i class="bi bi-pie-chart-fill text-warning"></i>
+                    <strong>Porciones:</strong> {{ producto.tamano_porciones }}
+                </span>
+                <span class="ficha-meta-badge">
+                    <i class="bi bi-clock-history text-primary"></i>
+                    <strong>Anticipación:</strong> {{ producto.tiempo_preparacion }}
+                </span>
+                <span class="ficha-meta-badge">
+                    <i class="bi bi-box-seam text-success"></i>
+                    <strong>Disponibilidad:</strong>
+                    {% if producto.disponible %}
+                        <span class="text-success fw-bold">En Stock ({{ producto.stock }} un.)</span>
+                    {% else %}
+                        <span class="text-danger fw-bold">Agotado</span>
+                    {% endif %}
+                </span>
+            </div>
+
+            <!-- Formulario de Compra -->
+            {% if producto.disponible %}
+                <form action="{% url 'carrito:agregar' producto.id %}" method="post" class="js-form-agregar-carrito card p-4 border-0 shadow-sm rounded-4 mb-4" style="background-color: var(--color-fondo-alt); border: 1px solid var(--color-borde) !important;">
+                    {% csrf_token %}
+                    <div class="row g-3 align-items-center">
+                        <div class="col-sm-4">
+                            <label for="cantidad-{{ producto.id }}" class="form-label small fw-bold text-muted">Cantidad:</label>
+                            <input type="number" id="cantidad-{{ producto.id }}" name="cantidad" value="1" min="1" max="{{ producto.stock }}" class="form-control text-center py-2 fw-bold fs-5">
+                        </div>
+                        <div class="col-sm-8">
+                            <label class="form-label d-none d-sm-block small fw-bold text-transparent">&nbsp;</label>
+                            <button type="submit" class="btn btn-pasteleria w-100 py-3 fs-6">
+                                <i class="bi bi-bag-plus fs-5"></i> Agregar al Carrito
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            {% else %}
+                <div class="alert alert-warning py-3 rounded-4 mb-4">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    Este producto se encuentra temporalmente agotado. Puedes escribirnos para encargar una nueva preparación.
+                </div>
+            {% endif %}
+
+            <!-- Botón Pedir por WhatsApp -->
+            <div class="d-grid gap-2 mb-4">
+                <a href="https://wa.me/{{ configuracion_sitio.whatsapp|default:'+56987654321'|cut:'+'|cut:' '|cut:'-' }}?text=Hola%20LA%20CREME,%20me%20interesa%20consultar%20por:%20{{ producto.nombre|urlencode }}" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp py-2">
+                    <i class="bi bi-whatsapp fs-5"></i> Consultar disponibilidad por WhatsApp
+                </a>
+            </div>
+
+            <!-- Información de Entrega y Cuidados -->
+            <div class="accordion shadow-sm rounded-4 overflow-hidden border" id="infoProducto">
+                <div class="accordion-item border-0 border-bottom">
+                    <h2 class="accordion-header" id="headingDesc">
+                        <button class="accordion-button fw-bold text-dark py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDesc" aria-expanded="true" aria-controls="collapseDesc">
+                            <i class="bi bi-card-text me-2 text-primary"></i> Descripción detallada & Ingredientes
+                        </button>
+                    </h2>
+                    <div id="collapseDesc" class="accordion-collapse collapse show" aria-labelledby="headingDesc" data-bs-parent="#infoProducto">
+                        <div class="accordion-body text-muted small lh-lg">
+                            {{ producto.descripcion_larga|linebreaks }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0 border-bottom">
+                    <h2 class="accordion-header" id="headingCons">
+                        <button class="accordion-button collapsed fw-bold text-dark py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCons" aria-expanded="false" aria-controls="collapseCons">
+                            <i class="bi bi-snow me-2 text-info"></i> Conservación y Servicio
+                        </button>
+                    </h2>
+                    <div id="collapseCons" class="accordion-collapse collapse" aria-labelledby="headingCons" data-bs-parent="#infoProducto">
+                        <div class="accordion-body text-muted small">
+                            <p class="mb-2"><strong>Temperatura:</strong> Mantener refrigerado entre 2°C y 5°C en su empaque original.</p>
+                            <p class="mb-2"><strong>Consumo recomendado:</strong> Dentro de las 72 horas posteriores a la recepción.</p>
+                            <p class="mb-0"><strong>Consejo del pastelero:</strong> Retirar del refrigerador 15 a 20 minutos antes de cortar para acentuar la textura cremosa del manjar y la suavidad del bizcocho.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0">
+                    <h2 class="accordion-header" id="headingEnv">
+                        <button class="accordion-button collapsed fw-bold text-dark py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEnv" aria-expanded="false" aria-controls="collapseEnv">
+                            <i class="bi bi-truck me-2 text-success"></i> Despacho y Retiro en Tienda
+                        </button>
+                    </h2>
+                    <div id="collapseEnv" class="accordion-collapse collapse" aria-labelledby="headingEnv" data-bs-parent="#infoProducto">
+                        <div class="accordion-body text-muted small">
+                            <p class="mb-2"><strong>Retiro gratis:</strong> En nuestra tienda de Providencia en el horario que elijas.</p>
+                            <p class="mb-0"><strong>Despacho a domicilio:</strong> Despacho refrigerado en Santiago. Envío gratis en compras desde ${{ configuracion_sitio.despacho_gratis_desde|default:45000|intcomma }} CLP.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Productos Relacionados -->
+    {% if productos_relacionados %}
+    <section class="mt-5 pt-5 border-top" aria-labelledby="titulo-relacionados">
+        <div class="d-flex justify-content-between align-items-end mb-4">
+            <div>
+                <span class="text-uppercase fw-bold text-muted small">Podría gustarte también</span>
+                <h2 id="titulo-relacionados" class="h3 font-serif mt-1 mb-0">Otras delicias de {{ producto.categoria.nombre }}</h2>
+            </div>
+            <a href="{{ producto.categoria.get_absolute_url }}" class="btn btn-pasteleria-outline btn-sm">
+                Ver toda la categoría <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+        <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-lg-4">
+            {% for prod_rel in productos_relacionados %}
+            <div class="col">
+                {% include "includes/_tarjeta_producto.html" with producto=prod_rel %}
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}

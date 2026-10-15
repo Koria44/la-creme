@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Mi Carrito de Compras | LA CREME Pastelería{% endblock %}
+{% block meta_description %}Revisa y edita los productos en tu carrito de compras de LA CREME. Calcula tu total y continúa hacia el checkout seguro.{% endblock %}
+
+{% block contenido %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-lacreme">
+            <li class="breadcrumb-item"><a href="{% url 'sitio:inicio' %}">Inicio</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Carrito de Compras</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+        <h1 class="display-6 font-serif mb-0">Carrito de Compras</h1>
+        {% if carrito|length > 0 %}
+        <form action="{% url 'carrito:vaciar' %}" method="post" onsubmit="return confirm('¿Estás seguro de que deseas vaciar todo el carrito?');">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3">
+                <i class="bi bi-trash3 me-1"></i> Vaciar Carrito
+            </button>
+        </form>
+        {% endif %}
+    </div>
+
+    {% if carrito|length > 0 %}
+    <div class="row g-4">
+        <!-- Tabla de Productos en el Carrito -->
+        <div class="col-lg-8">
+            <div class="table-responsive tabla-carrito">
+                <table class="table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col" class="py-3 ps-3">Producto</th>
+                            <th scope="col" class="py-3 text-center">Precio</th>
+                            <th scope="col" class="py-3 text-center" style="width: 130px;">Cantidad</th>
+                            <th scope="col" class="py-3 text-end">Subtotal</th>
+                            <th scope="col" class="py-3 text-center" style="width: 50px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in carrito %}
+                        <tr>
+                            <!-- Producto e Imagen -->
+                            <td class="ps-3 py-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <a href="{{ item.producto.get_absolute_url }}">
+                                        {% if item.producto.imagen %}
+                                            <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}" class="cart-thumb border">
+                                        {% else %}
+                                            <div class="cart-thumb bg-light d-flex align-items-center justify-content-center text-muted">
+                                                <i class="bi bi-cake2 fs-4"></i>
+                                            </div>
+                                        {% endif %}
+                                    </a>
+                                    <div>
+                                        <a href="{{ item.producto.categoria.get_absolute_url }}" class="small text-uppercase fw-bold text-muted text-decoration-none">
+                                            {{ item.producto.categoria.nombre }}
+                                        </a>
+                                        <h2 class="h6 mb-1">
+                                            <a href="{{ item.producto.get_absolute_url }}" class="text-dark text-decoration-none fw-bold">
+                                                {{ item.producto.nombre }}
+                                            </a>
+                                        </h2>
+                                        <small class="text-muted d-block">{{ item.producto.tamano_porciones }}</small>
+                                        {% if not item.hay_stock %}
+                                            <span class="badge bg-warning text-dark mt-1">Stock máx: {{ item.producto.stock }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!-- Precio Unitario -->
+                            <td class="text-center fw-semibold text-nowrap">
+                                ${{ item.precio|intcomma }} CLP
+                            </td>
+
+                            <!-- Selector de Cantidad con AJAX y fallback -->
+                            <td class="text-center">
+                                <form action="{% url 'carrito:actualizar' item.producto.id %}" method="post" class="js-form-actualizar-carrito d-inline">
+                                    {% csrf_token %}
+                                    <input type="number" name="cantidad" value="{{ item.cantidad }}" min="1" max="{{ item.producto.stock }}" class="form-control form-control-sm text-center fw-bold js-input-cantidad-carrito" style="width: 75px; margin: 0 auto;">
+                                    <noscript>
+                                        <button type="submit" class="btn btn-sm btn-secondary mt-1">Actualizar</button>
+                                    </noscript>
+                                </form>
+                            </td>
+
+                            <!-- Subtotal -->
+                            <td class="text-end fw-bold text-dark text-nowrap js-item-subtotal">
+                                ${{ item.subtotal|intcomma }} CLP
+                            </td>
+
+                            <!-- Eliminar con AJAX y fallback -->
+                            <td class="text-center pe-3">
+                                <form action="{% url 'carrito:eliminar' item.producto.id %}" method="post" class="js-form-eliminar-carrito d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-link text-danger p-0" title="Eliminar producto" aria-label="Eliminar {{ item.producto.nombre }}">
+                                        <i class="bi bi-trash3 fs-5"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Continuar Comprando -->
+            <div class="mt-4">
+                <a href="{% url 'catalogo:lista' %}" class="btn btn-outline-secondary rounded-pill px-4">
+                    <i class="bi bi-arrow-left me-1"></i> Seguir explorando el catálogo
+                </a>
+            </div>
+        </div>
+
+        <!-- Columna Resumen del Pedido -->
+        <div class="col-lg-4">
+            <div class="card-resumen">
+                <h2 class="h5 font-serif mb-4 text-dark pb-2 border-bottom">Resumen del Pedido</h2>
+
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Subtotal productos:</span>
+                    <strong class="text-dark js-cart-grand-total">${{ carrito.get_total_precio|intcomma }} CLP</strong>
+                </div>
+
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-muted">Despacho:</span>
+                    <span class="small text-muted">Se calcula al finalizar</span>
+                </div>
+
+                <!-- Notificación de Despacho Gratis -->
+                <div class="p-3 rounded-3 mb-4" style="background-color: var(--color-crema-suave); border: 1px dashed var(--color-dorado);">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <i class="bi bi-truck text-warning fs-5"></i>
+                        <span class="small fw-bold text-dark">Despacho Gratis en Santiago</span>
+                    </div>
+                    <p class="small text-muted mb-0">
+                        Válido en compras sobre ${{ configuracion.despacho_gratis_desde|default:45000|intcomma }} CLP.
+                    </p>
+                </div>
+
+                <hr class="my-3">
+
+                <div class="d-flex justify-content-between align-items-baseline mb-4">
+                    <span class="fs-5 fw-bold text-dark">Total estimado:</span>
+                    <span class="fs-4 fw-bold js-cart-grand-total" style="color: var(--color-frambuesa);">
+                        ${{ carrito.get_total_precio|intcomma }} CLP
+                    </span>
+                </div>
+
+                <!-- Botones de Acción -->
+                <div class="d-grid gap-3">
+                    <a href="{% url 'pedidos:checkout' %}" class="btn btn-pasteleria py-3 fs-6">
+                        <i class="bi bi-lock-fill me-1"></i> Finalizar Compra Segura
+                    </a>
+
+                    <a href="{{ whatsapp_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp py-2">
+                        <i class="bi bi-whatsapp fs-5"></i> Pedir por WhatsApp
+                    </a>
+                </div>
+
+                <div class="mt-4 text-center">
+                    <small class="text-muted d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-shield-check text-success fs-5"></i>
+                        Compra 100% protegida y garantizada
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <!-- Carrito Vacío -->
+    <div class="text-center py-5 my-4 bg-white rounded-4 border shadow-sm">
+        <div class="display-3 text-muted mb-3" style="color: var(--color-frambuesa) !important;">
+            <i class="bi bi-bag-x"></i>
+        </div>
+        <h2 class="h3 font-serif mb-2">Tu carrito está esperando algo dulce</h2>
+        <p class="text-muted mb-4" style="max-width: 500px; margin: 0 auto;">
+            Aún no has agregado ninguna torta, cheesecake o kuchen a tu carrito. ¡Explora nuestro catálogo y date un gusto hoy!
+        </p>
+        <a href="{% url 'catalogo:lista' %}" class="btn btn-pasteleria py-3 px-5 fs-6">
+            <i class="bi bi-cake2 me-1"></i> Ir al Catálogo de Productos
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

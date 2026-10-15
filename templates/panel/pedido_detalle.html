@@ -1,0 +1,124 @@
+{% extends "panel/base_panel.html" %}
+{% load humanize %}
+
+{% block title %}Gestionar Pedido #{{ pedido.id|stringformat:"05d" }} | Panel LA CREME{% endblock %}
+
+{% block contenido_panel %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h1 class="h3 font-serif mb-1">Pedido #{{ pedido.id|stringformat:"05d" }}</h1>
+        <p class="text-muted small mb-0">Creado el {{ pedido.fecha_creacion|date:"d/m/Y a las H:i" }} hrs</p>
+    </div>
+    <div class="d-flex gap-2">
+        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="window.print();">
+            <i class="bi bi-printer me-1"></i> Imprimir Comanda
+        </button>
+        <a href="{% url 'panel:pedidos' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left me-1"></i> Volver a Pedidos
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Columna Izquierda: Productos e Items -->
+    <div class="col-lg-8">
+        <div class="card p-4 rounded-4 border-0 shadow-sm bg-white mb-4">
+            <h2 class="h5 font-serif mb-3 text-dark pb-2 border-bottom">Ítems a Elaborar</h2>
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Producto</th>
+                            <th class="text-center">Cantidad</th>
+                            <th class="text-end">Precio Unitario</th>
+                            <th class="text-end">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in pedido.items.all %}
+                        <tr>
+                            <td>
+                                <strong class="d-block text-dark">{{ item.nombre_producto }}</strong>
+                                {% if item.producto %}
+                                    <small class="text-muted">{{ item.producto.tamano_porciones }}</small>
+                                {% endif %}
+                            </td>
+                            <td class="text-center fw-bold fs-6">{{ item.cantidad }}</td>
+                            <td class="text-end">${{ item.precio_unitario|intcomma }} CLP</td>
+                            <td class="text-end fw-bold">${{ item.subtotal|intcomma }} CLP</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-end text-muted">Subtotal productos:</td>
+                            <td class="text-end fw-semibold">${{ pedido.total|intcomma }} CLP</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="text-end text-muted">Costo despacho:</td>
+                            <td class="text-end fw-semibold">${{ pedido.costo_envio|intcomma }} CLP</td>
+                        </tr>
+                        <tr class="fs-5">
+                            <td colspan="3" class="text-end fw-bold text-dark">Total del Pedido:</td>
+                            <td class="text-end fw-bold" style="color: var(--color-frambuesa);">
+                                ${{ pedido.total_con_envio|intcomma }} CLP
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        {% if pedido.notas %}
+        <div class="card p-4 rounded-4 border-0 shadow-sm bg-white">
+            <h3 class="h6 font-serif mb-2 text-dark"><i class="bi bi-chat-quote text-warning me-1"></i> Dedicatoria / Indicaciones del Cliente:</h3>
+            <p class="text-muted small mb-0 p-3 bg-light rounded-3">{{ pedido.notas }}</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Columna Derecha: Control de Estado y Datos del Cliente -->
+    <div class="col-lg-4">
+        <!-- Tarjeta de Cambio de Estado -->
+        <div class="card p-4 rounded-4 border-0 shadow-sm bg-white mb-4">
+            <h2 class="h6 font-serif mb-3 text-dark pb-2 border-bottom">Actualizar Estado</h2>
+            <div class="mb-3">
+                <span class="text-muted small d-block mb-1">Estado actual:</span>
+                <span class="badge bg-{{ pedido.badge_class }} fs-6 py-2 px-3">{{ pedido.get_estado_display }}</span>
+            </div>
+
+            <form action="{% url 'panel:pedido_cambiar_estado' pedido.id %}" method="post">
+                {% csrf_token %}
+                <label class="form-label small fw-semibold">Cambiar a nuevo estado:</label>
+                {{ form_estado.estado }}
+                <button type="submit" class="btn btn-pasteleria w-100 mt-3 btn-sm py-2">
+                    <i class="bi bi-arrow-repeat me-1"></i> Actualizar Estado
+                </button>
+            </form>
+        </div>
+
+        <!-- Tarjeta de Datos del Cliente -->
+        <div class="card p-4 rounded-4 border-0 shadow-sm bg-white">
+            <h2 class="h6 font-serif mb-3 text-dark pb-2 border-bottom">Datos de Entrega y Cliente</h2>
+            <ul class="list-unstyled small mb-3">
+                <li class="mb-2"><strong>Cliente:</strong> {{ pedido.nombre }}</li>
+                <li class="mb-2"><strong>Correo:</strong> <a href="mailto:{{ pedido.correo }}">{{ pedido.correo }}</a></li>
+                <li class="mb-2"><strong>Teléfono:</strong> {{ pedido.telefono }}</li>
+                <li class="mb-2"><strong>Modalidad:</strong> {{ pedido.get_tipo_entrega_display }}</li>
+                {% if pedido.tipo_entrega == 'despacho' %}
+                <li class="mb-2"><strong>Dirección:</strong> {{ pedido.direccion }}, {{ pedido.comuna }}</li>
+                {% endif %}
+                <li class="mb-2"><strong>Fecha deseada:</strong> {{ pedido.fecha_entrega|date:"d/m/Y" }}</li>
+                <li class="mb-2"><strong>Horario:</strong> {{ pedido.hora_entrega }}</li>
+                <li class="mb-0"><strong>Método de pago:</strong> {{ pedido.get_metodo_pago_display }}</li>
+            </ul>
+
+            <div class="d-grid gap-2 pt-2 border-top">
+                <a href="https://wa.me/{{ pedido.telefono|cut:'+'|cut:' '|cut:'-' }}?text=Hola%20{{ pedido.nombre|urlencode }},%20te%20escribimos%20de%20Pastelería%20LA%20CREME%20sobre%20tu%20pedido%20%23{{ pedido.id|stringformat:'05d' }}" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm">
+                    <i class="bi bi-whatsapp me-1"></i> Contactar por WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

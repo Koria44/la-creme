@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Catálogo de Tortas y Pasteles | LA CREME Santiago{% endblock %}
+{% block meta_description %}Explora nuestro catálogo de tortas artesanales, kuchenes, cheesecakes y pasteles finos en Santiago. Filtra por precio y categoría con despacho a domicilio.{% endblock %}
+
+{% block contenido %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-lacreme">
+            <li class="breadcrumb-item"><a href="{% url 'sitio:inicio' %}">Inicio</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Catálogo de Productos</li>
+        </ol>
+    </nav>
+
+    <!-- Encabezado de Sección -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4 border-bottom pb-3">
+        <div>
+            <span class="text-uppercase fw-bold text-muted small">Repostería Fina Artesanal</span>
+            <h1 class="display-6 font-serif mt-1 mb-1">Catálogo de Productos</h1>
+            <p class="text-muted small mb-0">Mostrando {{ total_resultados }} delicias preparadas a mano</p>
+        </div>
+    </div>
+
+    <!-- Barra de Filtros y Búsqueda -->
+    <div class="card border-0 shadow-sm rounded-4 p-3 mb-4" style="background-color: #FFFFFF; border: 1px solid var(--color-borde) !important;">
+        <form method="get" action="{% url 'catalogo:lista' %}" class="row g-2 align-items-end">
+            <!-- Búsqueda por texto -->
+            <div class="col-md-3">
+                <label class="form-label small fw-bold text-muted mb-1">Buscar producto</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" name="q" class="form-control border-start-0" placeholder="Ej. Hojarasca, Tres Leches..." value="{{ query_actual }}">
+                </div>
+            </div>
+
+            <!-- Filtro por Categoría -->
+            <div class="col-md-3">
+                <label class="form-label small fw-bold text-muted mb-1">Categoría</label>
+                <select name="categoria" class="form-select">
+                    <option value="">Todas las categorías</option>
+                    {% for cat in categorias %}
+                        <option value="{{ cat.slug }}" {% if categoria_actual == cat.slug %}selected{% endif %}>
+                            {{ cat.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Rango de Precios -->
+            <div class="col-md-2 col-6">
+                <label class="form-label small fw-bold text-muted mb-1">Precio Mín.</label>
+                <input type="number" name="precio_min" class="form-control" placeholder="$ 0" value="{{ precio_min_actual }}">
+            </div>
+            <div class="col-md-2 col-6">
+                <label class="form-label small fw-bold text-muted mb-1">Precio Máx.</label>
+                <input type="number" name="precio_max" class="form-control" placeholder="$ 70.000" value="{{ precio_max_actual }}">
+            </div>
+
+            <!-- Ordenamiento -->
+            <div class="col-md-2">
+                <label class="form-label small fw-bold text-muted mb-1">Ordenar por</label>
+                <select name="orden" class="form-select">
+                    <option value="destacados" {% if orden_actual == 'destacados' %}selected{% endif %}>Destacados</option>
+                    <option value="precio_asc" {% if orden_actual == 'precio_asc' %}selected{% endif %}>Precio: Menor a Mayor</option>
+                    <option value="precio_desc" {% if orden_actual == 'precio_desc' %}selected{% endif %}>Precio: Mayor a Menor</option>
+                    <option value="nombre_asc" {% if orden_actual == 'nombre_asc' %}selected{% endif %}>Nombre: A - Z</option>
+                    <option value="novedades" {% if orden_actual == 'novedades' %}selected{% endif %}>Novedades</option>
+                </select>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="col-12 d-flex justify-content-end gap-2 mt-3">
+                {% if query_actual or categoria_actual or precio_min_actual or precio_max_actual or orden_actual != 'destacados' %}
+                    <a href="{% url 'catalogo:lista' %}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
+                        <i class="bi bi-x-circle me-1"></i> Limpiar filtros
+                    </a>
+                {% endif %}
+                <button type="submit" class="btn btn-pasteleria btn-sm rounded-pill px-4">
+                    <i class="bi bi-funnel me-1"></i> Aplicar Filtros
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Grilla de Productos -->
+    {% if productos %}
+        <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-lg-3">
+            {% for producto in productos %}
+            <div class="col">
+                {% include "includes/_tarjeta_producto.html" with producto=producto %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Paginación -->
+        {% include "includes/_paginacion.html" %}
+    {% else %}
+        <div class="text-center py-5 my-4 bg-white rounded-4 border">
+            <div class="display-4 text-muted mb-3"><i class="bi bi-cake2"></i></div>
+            <h2 class="h4 mb-2">No encontramos productos con esos filtros</h2>
+            <p class="text-muted mb-4">Intenta ajustar tu búsqueda, rango de precios o categoría seleccionada.</p>
+            <a href="{% url 'catalogo:lista' %}" class="btn btn-pasteleria px-4">
+                Ver todos los productos
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

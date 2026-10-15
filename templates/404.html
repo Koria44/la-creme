@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Página no encontrada (404) | LA CREME Pastelería{% endblock %}
+{% block meta_description %}La página que buscas no existe o ha sido movida. Explora nuestro delicioso catálogo de tortas y pasteles.{% endblock %}
+
+{% block contenido %}
+<section class="py-5 text-center my-auto">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="display-1 fw-bold text-muted mb-3 font-serif" style="color: var(--color-frambuesa) !important;">404</div>
+                <h1 class="h2 mb-3">¡Vaya! Esta receta no está en nuestra cocina</h1>
+                <p class="lead text-muted mb-4">
+                    La página que intentas visitar no existe, cambió de nombre o fue retirada de nuestro horno.
+                </p>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="{% url 'sitio:inicio' %}" class="btn btn-pasteleria px-4 py-2">
+                        <i class="bi bi-house-door me-1"></i> Ir al Inicio
+                    </a>
+                    <a href="{% url 'catalogo:lista' %}" class="btn btn-pasteleria-outline px-4 py-2">
+                        <i class="bi bi-cake2 me-1"></i> Ver Catálogo Completo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

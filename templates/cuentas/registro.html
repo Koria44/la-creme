@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Crear Cuenta de Cliente | LA CREME Pastelería{% endblock %}
+{% block meta_description %}Regístrate en LA CREME para guardar tus direcciones de despacho, agilizar tus pedidos de tortas y revisar el estado de tus compras.{% endblock %}
+
+{% block contenido %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card p-4 p-md-5 rounded-4 border-0 shadow-sm bg-white">
+                <div class="text-center mb-4">
+                    <span class="navbar-brand-text fs-2">LA CREME</span>
+                    <h1 class="h3 font-serif mt-2 mb-1">Crea tu cuenta</h1>
+                    <p class="text-muted small">Únete a nuestra comunidad dulce y gestiona tus pedidos fácilmente</p>
+                </div>
+
+                <form method="post" action="{% url 'cuentas:registro' %}" novalidate>
+                    {% csrf_token %}
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="{{ form.first_name.id_for_label }}" class="form-label fw-semibold small">Nombre *</label>
+                            {{ form.first_name }}
+                            {% if form.first_name.errors %}<div class="text-danger small mt-1">{{ form.first_name.errors.0 }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.last_name.id_for_label }}" class="form-label fw-semibold small">Apellido *</label>
+                            {{ form.last_name }}
+                            {% if form.last_name.errors %}<div class="text-danger small mt-1">{{ form.last_name.errors.0 }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-12">
+                            <label for="{{ form.username.id_for_label }}" class="form-label fw-semibold small">Nombre de Usuario *</label>
+                            {{ form.username }}
+                            {% if form.username.errors %}<div class="text-danger small mt-1">{{ form.username.errors.0 }}</div>{% endif %}
+                            <small class="text-muted">{{ form.username.help_text }}</small>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="{{ form.email.id_for_label }}" class="form-label fw-semibold small">Correo Electrónico *</label>
+                            {{ form.email }}
+                            {% if form.email.errors %}<div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.telefono.id_for_label }}" class="form-label fw-semibold small">Teléfono / WhatsApp</label>
+                            {{ form.telefono }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="{{ form.comuna.id_for_label }}" class="form-label fw-semibold small">Comuna habitual</label>
+                            {{ form.comuna }}
+                        </div>
+
+                        <div class="col-12">
+                            <label for="{{ form.direccion.id_for_label }}" class="form-label fw-semibold small">Dirección de entrega habitual</label>
+                            {{ form.direccion }}
+                        </div>
+
+                        <div class="col-12">
+                            <label for="{{ form.password1.id_for_label }}" class="form-label fw-semibold small">Contraseña *</label>
+                            {{ form.password1 }}
+                            {% if form.password1.errors %}<div class="text-danger small mt-1">{{ form.password1.errors.0 }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-12">
+                            <label for="{{ form.password2.id_for_label }}" class="form-label fw-semibold small">Confirmar Contraseña *</label>
+                            {{ form.password2 }}
+                            {% if form.password2.errors %}<div class="text-danger small mt-1">{{ form.password2.errors.0 }}</div>{% endif %}
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-pasteleria w-100 py-3">
+                                <i class="bi bi-person-check me-1"></i> Registrarme Ahora
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="text-center mt-4 pt-3 border-top">
+                    <p class="small text-muted mb-0">
+                        ¿Ya tienes una cuenta registrada?
+                        <a href="{% url 'cuentas:ingresar' %}" class="fw-bold">Inicia sesión aquí</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

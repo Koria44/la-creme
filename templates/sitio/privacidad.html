@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Política de Privacidad | LA CREME Pastelería{% endblock %}
+{% block meta_description %}Conoce cómo protegemos y tratamos tus datos personales, de contacto y despacho en LA CREME Pastelería con total seguridad y transparencia.{% endblock %}
+
+{% block contenido %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-lacreme">
+            <li class="breadcrumb-item"><a href="{% url 'sitio:inicio' %}">Inicio</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Política de Privacidad</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="p-4 p-md-5 bg-white rounded-4 border shadow-sm">
+                <h1 class="display-6 font-serif mb-4">Política de Privacidad y Protección de Datos</h1>
+                <p class="text-muted small">Última actualización: Octubre de 2026</p>
+                <hr class="my-4">
+
+                <h2 class="h5 fw-bold text-dark mt-4">1. Recopilación de Información</h2>
+                <p class="text-muted">
+                    En LA CREME recopilamos únicamente los datos necesarios para procesar tus compras, coordinar entregas y responder a tus consultas: nombre, correo electrónico, teléfono de contacto y dirección de despacho.
+                </p>
+
+                <h2 class="h5 fw-bold text-dark mt-4">2. Uso de los Datos Personales</h2>
+                <p class="text-muted">
+                    La información que nos proporcionas se utiliza exclusivamente para:
+                </p>
+                <ul class="text-muted">
+                    <li>Gestionar y despachar tus pedidos de forma oportuna.</li>
+                    <li>Enviar confirmaciones de compra y comprobantes de estado por correo o mensajería.</li>
+                    <li>Atender solicitudes, cotizaciones especiales y servicio postventa.</li>
+                </ul>
+
+                <h2 class="h5 fw-bold text-dark mt-4">3. Confidencialidad y Seguridad</h2>
+                <p class="text-muted">
+                    Tus datos nunca serán vendidos, cedidos ni compartidos con terceros con fines comerciales ajenos a la operación de LA CREME. Implementamos estándares seguros de almacenamiento y protección para resguardar tu privacidad en todo momento.
+                </p>
+
+                <h2 class="h5 fw-bold text-dark mt-4">4. Derechos del Usuario</h2>
+                <p class="text-muted">
+                    Puedes solicitar en cualquier momento la actualización, rectificación o eliminación de tus datos de cliente escribiéndonos a <a href="mailto:{{ configuracion_sitio.correo|default:'contacto@pastelerialacreme.cl' }}">{{ configuracion_sitio.correo|default:'contacto@pastelerialacreme.cl' }}</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

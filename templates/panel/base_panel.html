@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Panel de Control | LA CREME Administración{% endblock %}
+{% block meta_description %}Panel de administración privado para staff de Pastelería LA CREME.{% endblock %}
+
+{% block extra_css %}
+<!-- Chart.js para gráficos analíticos del panel -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<style>
+    .panel-wrapper {
+        min-height: calc(100vh - 140px);
+        background-color: #F8F9FA;
+    }
+    .panel-nav-link {
+        color: #DAC9C2;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        margin-bottom: 0.35rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+    .panel-nav-link:hover,
+    .panel-nav-link.active {
+        background-color: var(--color-frambuesa);
+        color: #FFFFFF !important;
+    }
+</style>
+{% endblock %}
+
+{% block contenido %}
+<div class="panel-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Barra Lateral del Panel -->
+            <aside class="col-lg-2 col-md-3 p-0 bg-dark text-white panel-sidebar shadow">
+                <div class="p-3 mb-2 border-bottom border-secondary">
+                    <span class="text-uppercase small fw-bold text-warning letter-spacing-1">Administración</span>
+                    <h2 class="h5 font-serif text-white mb-0 mt-1">LA CREME Panel</h2>
+                </div>
+                <nav class="p-2" aria-label="Menú del panel de administración">
+                    <a href="{% url 'panel:dashboard' %}" class="panel-nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                    <a href="{% url 'panel:pedidos' %}" class="panel-nav-link {% if 'pedido' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="bi bi-receipt"></i> Pedidos
+                    </a>
+                    <a href="{% url 'panel:productos' %}" class="panel-nav-link {% if 'producto' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="bi bi-cake2"></i> Productos
+                    </a>
+                    <a href="{% url 'panel:stock' %}" class="panel-nav-link {% if 'stock' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="bi bi-box-seam"></i> Control de Stock
+                    </a>
+                    <a href="{% url 'panel:categorias' %}" class="panel-nav-link {% if 'categoria' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="bi bi-tags"></i> Categorías
+                    </a>
+                    <a href="{% url 'panel:clientes' %}" class="panel-nav-link {% if 'cliente' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="bi bi-people"></i> Clientes
+                    </a>
+                    <a href="{% url 'panel:mensajes' %}" class="panel-nav-link {% if 'mensaje' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="bi bi-chat-left-dots"></i> Mensajes
+                        {% if mensajes_pendientes %}
+                            <span class="badge bg-danger ms-auto">{{ mensajes_pendientes }}</span>
+                        {% endif %}
+                    </a>
+                    <a href="{% url 'panel:configuracion' %}" class="panel-nav-link {% if 'configuracion' in request.resolver_match.url_name %}active{% endif %}">
+                        <i class="bi bi-sliders"></i> Configuración
+                    </a>
+                    <hr class="border-secondary my-3">
+                    <a href="{% url 'admin:index' %}" target="_blank" class="panel-nav-link text-warning">
+                        <i class="bi bi-gear-fill"></i> Django Admin (Respaldo)
+                    </a>
+                    <a href="{% url 'sitio:inicio' %}" class="panel-nav-link">
+                        <i class="bi bi-box-arrow-up-right"></i> Ver Tienda Pública
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Contenido Principal del Panel -->
+            <main class="col-lg-10 col-md-9 p-4" role="main">
+                {% block contenido_panel %}{% endblock %}
+            </main>
+        </div>
+    </div>
+</div>
+{% endblock %}

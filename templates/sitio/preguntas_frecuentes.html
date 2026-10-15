@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Preguntas Frecuentes | LA CREME Pastelería Santiago{% endblock %}
+{% block meta_description %}Resuelve tus dudas sobre pedidos de tortas, tiempos de anticipación, despacho a domicilio en Santiago, métodos de pago y conservación en LA CREME.{% endblock %}
+
+{% block meta_extra %}
+<!-- JSON-LD FAQPage Estructurado para Rich Snippets en Google -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Con cuánta anticipación debo realizar mi pedido?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Para tortas clásicas, kuchenes y cheesecakes recomendamos un mínimo de 24 a 48 horas de anticipación. Para tortas personalizadas temáticas o de matrimonio solicitamos al menos 72 horas a 5 días hábiles."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿A qué comunas de Santiago despachan?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Despachamos a Providencia, Las Condes, Vitacura, Lo Barnechea, Ñuñoa, La Reina, Santiago Centro y comunas aledañas en vehículos refrigerados y seguros."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cómo debo conservar mi torta una vez recibida?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Todas nuestras tortas y cheesecakes deben mantenerse refrigerados entre 2°C y 5°C. Recomendamos retirar del refrigerador 15 a 20 minutos antes de servir para disfrutar su textura y sabor en su punto óptimo."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cuáles son los métodos de pago aceptados?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "En el sitio web aceptamos transferencia bancaria previa y pago en efectivo o tarjetas al momento de retirar en nuestra tienda física."
+      }
+    }
+  ]
+}
+</script>
+{% endblock %}
+
+{% block contenido %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-lacreme">
+            <li class="breadcrumb-item"><a href="{% url 'sitio:inicio' %}">Inicio</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Preguntas Frecuentes</li>
+        </ol>
+    </nav>
+
+    <div class="text-center mb-5">
+        <span class="text-uppercase fw-bold text-muted small">Dudas habituales</span>
+        <h1 class="display-6 mt-1 mb-2">Preguntas Frecuentes</h1>
+        <p class="text-muted mx-auto" style="max-width: 650px;">
+            Encuentra respuestas claras y rápidas sobre tiempos de elaboración, pedidos en línea, modalidades de entrega y cuidados para tus pasteles.
+        </p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="accordion shadow-sm rounded-4 overflow-hidden border" id="faqAccordion">
+
+                <div class="accordion-item border-0 border-bottom">
+                    <h2 class="accordion-header" id="headingOne">
+                        <button class="accordion-button fw-bold text-dark py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            ¿Con cuánta anticipación debo hacer mi pedido?
+                        </button>
+                    </h2>
+                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            Para tortas de catálogo, kuchenes y cheesecakes recomendamos hacer tu pedido con al menos <strong>24 a 48 horas de anticipación</strong>. Si necesitas una torta personalizada con diseño temático, sugerimos entre <strong>3 a 5 días hábiles</strong> para coordinar detalles y decoración con nuestro equipo pastelero.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0 border-bottom">
+                    <h2 class="accordion-header" id="headingTwo">
+                        <button class="accordion-button collapsed fw-bold text-dark py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            ¿A qué comunas realizan despachos a domicilio?
+                        </button>
+                    </h2>
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            Llegamos a gran parte del Gran Santiago: Providencia, Las Condes, Vitacura, Lo Barnechea, Ñuñoa, La Reina, Santiago Centro, Macul, Peñalolén y San Miguel. El costo de despacho base es de <strong>$3.990</strong>, y contamos con <strong>despacho gratis en compras sobre $45.000</strong>.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0 border-bottom">
+                    <h2 class="accordion-header" id="headingThree">
+                        <button class="accordion-button collapsed fw-bold text-dark py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            ¿Cómo debo conservar mi torta una vez recibida?
+                        </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            Todas nuestras preparaciones contienen lácteos frescos y frutas naturales, por lo que deben mantenerse <strong>refrigeradas entre 2°C y 5°C</strong> dentro de su caja para que no absorban olores. Recomendamos retirarla del refrigerador unos 15 minutos antes de cortar para que las cremas y el manjar adquieran su textura más suave y deliciosa.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0 border-bottom">
+                    <h2 class="accordion-header" id="headingFour">
+                        <button class="accordion-button collapsed fw-bold text-dark py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            ¿Cuáles son los medios de pago disponibles?
+                        </button>
+                    </h2>
+                    <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            Puedes pagar mediante <strong>transferencia bancaria electrónica</strong> (te proporcionamos los datos al finalizar la compra en el sitio) o en <strong>efectivo / tarjetas</strong> directamente al retirar en nuestra tienda física de Providencia.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item border-0">
+                    <h2 class="accordion-header" id="headingFive">
+                        <button class="accordion-button collapsed fw-bold text-dark py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                            ¿Hacen tortas para matrimonios o eventos corporativos?
+                        </button>
+                    </h2>
+                    <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            ¡Sí! Contamos con servicio especializado de tortas de pisos, mesas dulces y cajas de regalo corporativas con alfajores y galletas finas. Escríbenos a través de nuestro <a href="{% url 'sitio:contacto' %}" class="fw-bold">formulario de contacto</a> o por WhatsApp para armar una cotización formal.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Caja de ayuda -->
+            <div class="text-center mt-5 p-4 bg-white rounded-4 border shadow-sm">
+                <h3 class="h5 mb-2 font-serif">¿No encontraste lo que buscabas?</h3>
+                <p class="text-muted small mb-3">Estamos disponibles para responder tus preguntas y asesorarte de inmediato.</p>
+                <a href="https://wa.me/{{ configuracion_sitio.whatsapp|default:'+56987654321'|cut:'+'|cut:' '|cut:'-' }}" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp px-4">
+                    <i class="bi bi-whatsapp me-1"></i> Escríbenos por WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

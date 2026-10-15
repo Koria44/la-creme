@@ -1,0 +1,319 @@
+{% extends "base.html" %}
+{% load static humanize %}
+
+{% block title %}LA CREME | Pastelería Artesanal en Providencia, Santiago{% endblock %}
+{% block meta_description %}Pastelería fina y tradicional en Santiago. Tortas para cumpleaños, cheesecakes, kuchen sureño y alfajores con despacho a domicilio o retiro en tienda.{% endblock %}
+
+{% block contenido %}
+<!-- 1. Hero Principal -->
+<section class="hero-lacreme" aria-label="Bienvenida a LA CREME">
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-lg-7 text-center text-lg-start">
+                <span class="hero-badge">
+                    <i class="bi bi-stars me-1"></i> Tradición & Pasión Pastelera
+                </span>
+                <h1 class="hero-title">
+                    El arte de la pastelería <span>hecha a mano</span> con dedicación
+                </h1>
+                <p class="hero-lead">
+                    Elaboramos tortas húmedas, kuchenes del sur, cheesecakes sedosos y repostería fina con ingredientes naturales, manjar de campo y chocolate belga.
+                </p>
+                <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
+                    <a href="{% url 'catalogo:lista' %}" class="btn btn-pasteleria py-3 px-4 fs-6">
+                        <i class="bi bi-cake2 fs-5"></i> Explorar Catálogo
+                    </a>
+                    <a href="https://wa.me/{{ configuracion_sitio.whatsapp|default:'+56987654321'|cut:'+'|cut:' '|cut:'-' }}" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp py-3 px-4 fs-6">
+                        <i class="bi bi-whatsapp fs-5"></i> Pedir por WhatsApp
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block text-center">
+                <div class="p-3 bg-white bg-opacity-10 rounded-4 border border-warning border-opacity-25 shadow-lg">
+                    <img src="{% if productos_destacados.0.imagen %}{{ productos_destacados.0.imagen.url }}{% else %}/static/img/hero-cake.jpg{% endif %}" alt="Torta artesanal destacada de LA CREME" class="img-fluid rounded-4 shadow" width="500" height="400" loading="eager">
+                    <div class="mt-3 text-warning font-serif fst-italic">
+                        "Horneado hoy, fresco para tu celebración"
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 2. Categorías Destacadas -->
+<section class="py-5" aria-labelledby="titulo-categorias">
+    <div class="container py-2">
+        <div class="text-center mb-5">
+            <span class="text-uppercase fw-bold text-muted small letter-spacing-2">Nuestras Especialidades</span>
+            <h2 id="titulo-categorias" class="display-6 mt-1 mb-2">Explora por Categoría</h2>
+            <p class="text-muted mx-auto" style="max-width: 550px;">
+                Descubre nuestras creaciones dulces elaboradas diariamente en nuestro obrador artesanal.
+            </p>
+        </div>
+
+        <div class="row g-4 row-cols-2 row-cols-md-3 row-cols-lg-6 justify-content-center">
+            {% for cat in categorias_destacadas %}
+            <div class="col">
+                <a href="{{ cat.get_absolute_url }}" class="card-categoria text-decoration-none">
+                    <div class="categoria-avatar">
+                        {% if cat.imagen %}
+                            <img src="{{ cat.imagen.url }}" alt="{{ cat.nombre }} en LA CREME" width="90" height="90" loading="lazy">
+                        {% else %}
+                            <div class="w-100 h-100 bg-light d-flex align-items-center justify-content-center text-primary">
+                                <i class="bi bi-cup-hot fs-3"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <h3 class="h6 fw-bold mb-0 text-dark">{{ cat.nombre }}</h3>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- 3. Productos Más Populares / Destacados -->
+<section class="py-5 bg-white border-top border-bottom" aria-labelledby="titulo-destacados">
+    <div class="container py-2">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4">
+            <div>
+                <span class="text-uppercase fw-bold text-muted small">Los Favoritos de Nuestros Clientes</span>
+                <h2 id="titulo-destacados" class="display-6 mt-1 mb-0">Productos Destacados</h2>
+            </div>
+            <a href="{% url 'catalogo:lista' %}" class="btn btn-pasteleria-outline mt-3 mt-md-0">
+                Ver todos los productos <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-lg-4">
+            {% for producto in productos_destacados %}
+            <div class="col">
+                {% include "includes/_tarjeta_producto.html" with producto=producto %}
+            </div>
+            {% empty %}
+            <div class="col-12 text-center py-4">
+                <p class="text-muted">No hay productos destacados en este momento.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- 4. Sección: ¿Por qué elegir LA CREME? -->
+<section class="py-5" style="background-color: var(--color-fondo-alt);" aria-labelledby="titulo-valores">
+    <div class="container py-3">
+        <div class="text-center mb-5">
+            <span class="text-uppercase fw-bold text-muted small">Nuestra Promesa</span>
+            <h2 id="titulo-valores" class="display-6 mt-1">¿Por qué elegir LA CREME?</h2>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="paso-box text-center">
+                    <div class="fs-1 text-primary mb-3" style="color: var(--color-frambuesa) !important;">
+                        <i class="bi bi-heart-pulse"></i>
+                    </div>
+                    <h3 class="h5 fw-bold mb-2">Ingredientes 100% Puros</h3>
+                    <p class="text-muted small mb-0">
+                        Usamos mantequilla fresca, manjar casero cocinado a fuego lento y chocolate belga real. Sin sucedáneos ni conservantes artificiales.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="paso-box text-center">
+                    <div class="fs-1 text-primary mb-3" style="color: var(--color-frambuesa) !important;">
+                        <i class="bi bi-brush"></i>
+                    </div>
+                    <h3 class="h5 fw-bold mb-2">Elaboración Artesanal</h3>
+                    <p class="text-muted small mb-0">
+                        Cada bizcocho se bate a mano, cada hojarasca se hornea de forma individual y cada detalle se decora con amor y paciencia.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="paso-box text-center">
+                    <div class="fs-1 text-primary mb-3" style="color: var(--color-frambuesa) !important;">
+                        <i class="bi bi-truck"></i>
+                    </div>
+                    <h3 class="h5 fw-bold mb-2">Despacho Refrigerado</h3>
+                    <p class="text-muted small mb-0">
+                        Tu torta viaja segura en cajas reforzadas con control de temperatura para que llegue impecable a tu mesa.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="paso-box text-center">
+                    <div class="fs-1 text-primary mb-3" style="color: var(--color-frambuesa) !important;">
+                        <i class="bi bi-stars"></i>
+                    </div>
+                    <h3 class="h5 fw-bold mb-2">Atención Cercana</h3>
+                    <p class="text-muted small mb-0">
+                        Te asesoramos en porciones, dedicatorias y requerimientos dietéticos para que tu evento sea inolvidable.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 5. Cómo hacer tu pedido en 3 simples pasos -->
+<section class="py-5" aria-labelledby="titulo-pasos">
+    <div class="container py-3">
+        <div class="text-center mb-5">
+            <span class="text-uppercase fw-bold text-muted small">Proceso Fácil y Rápido</span>
+            <h2 id="titulo-pasos" class="display-6 mt-1">Cómo hacer tu pedido en 3 pasos</h2>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="paso-box">
+                    <div class="paso-numero">1</div>
+                    <h3 class="h5 fw-bold mb-2">Elige tu delicia</h3>
+                    <p class="text-muted mb-0">
+                        Explora nuestro catálogo por categoría, revisa el número de porciones y agrega tus tortas o postres al carrito.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="paso-box">
+                    <div class="paso-numero">2</div>
+                    <h3 class="h5 fw-bold mb-2">Agenda fecha y entrega</h3>
+                    <p class="text-muted mb-0">
+                        Selecciona si prefieres retiro en tienda o despacho a domicilio, e indícanos el día y horario que más te acomode.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="paso-box">
+                    <div class="paso-numero">3</div>
+                    <h3 class="h5 fw-bold mb-2">¡Disfruta tu momento dulce!</h3>
+                    <p class="text-muted mb-0">
+                        Recibe tu pedido fresco en tu puerta o retíralo listo para celebrar con tu familia y amigos.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <a href="{% url 'catalogo:lista' %}" class="btn btn-pasteleria py-3 px-5 fs-6">
+                <i class="bi bi-cart-check fs-5"></i> Empezar mi Pedido Ahora
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- 6. Testimonios de Clientes -->
+<section class="py-5 bg-white border-top border-bottom" aria-labelledby="titulo-testimonios">
+    <div class="container py-3">
+        <div class="text-center mb-5">
+            <span class="text-uppercase fw-bold text-muted small">Opiniones</span>
+            <h2 id="titulo-testimonios" class="display-6 mt-1">Lo que dicen nuestros clientes</h2>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 p-4 shadow-sm rounded-4" style="background-color: var(--color-crema);">
+                    <div class="text-warning mb-3">
+                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                    </div>
+                    <p class="fst-italic text-dark mb-4">
+                        "La Torta Amor es de otro planeta: la hojarasca es crujiente, el manjar no empalaga y la frambuesa le da el toque perfecto. Fue el éxito del cumpleaños de mi mamá."
+                    </p>
+                    <div class="mt-auto">
+                        <h4 class="h6 fw-bold mb-0 text-dark">Valentina Morales</h4>
+                        <small class="text-muted">Providencia, Santiago</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 p-4 shadow-sm rounded-4" style="background-color: var(--color-crema);">
+                    <div class="text-warning mb-3">
+                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                    </div>
+                    <p class="fst-italic text-dark mb-4">
+                        "Pedí el Cheesecake de Frutos Rojos para una cena con amigos. Llegó impecable a la hora coordinada y el sabor es idéntico a los de pastelería de hotel 5 estrellas."
+                    </p>
+                    <div class="mt-auto">
+                        <h4 class="h6 fw-bold mb-0 text-dark">Cristián Undurraga</h4>
+                        <small class="text-muted">Las Condes, Santiago</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 p-4 shadow-sm rounded-4" style="background-color: var(--color-crema);">
+                    <div class="text-warning mb-3">
+                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                    </div>
+                    <p class="fst-italic text-dark mb-4">
+                        "Excelente atención por WhatsApp, resolvieron todas mis dudas de porciones y la torta personalizada de mi hijo quedó exactamente como en la foto que envié."
+                    </p>
+                    <div class="mt-auto">
+                        <h4 class="h6 fw-bold mb-0 text-dark">Sofía Carvallo</h4>
+                        <small class="text-muted">Ñuñoa, Santiago</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 7. Bloque Instagram / Redes Sociales -->
+<section class="py-5" aria-labelledby="titulo-instagram">
+    <div class="container py-3 text-center">
+        <i class="bi bi-instagram fs-1" style="color: var(--color-frambuesa);"></i>
+        <h2 id="titulo-instagram" class="h3 font-serif mt-2 mb-1">Síguenos en Instagram</h2>
+        <p class="text-muted mb-4">
+            Inspírate con nuestras creaciones diarias, promociones exclusivas y el detrás de escena de nuestro taller.
+        </p>
+        <a href="{{ configuracion_sitio.instagram|default:'https://www.instagram.com/pasteleria_la_creme/' }}" target="_blank" rel="noopener noreferrer" class="btn btn-pasteleria-outline px-4 py-2">
+            <i class="bi bi-instagram me-1"></i> @pasteleria_la_creme
+        </a>
+    </div>
+</section>
+
+<!-- 8. Bloque Ubicación & Horarios -->
+<section class="py-5 bg-white border-top" aria-labelledby="titulo-donde-estamos">
+    <div class="container">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-6">
+                <span class="text-uppercase fw-bold text-muted small">Te esperamos con aroma a café y vainilla</span>
+                <h2 id="titulo-donde-estamos" class="display-6 mt-1 mb-3">Visita nuestra tienda</h2>
+                <p class="text-muted mb-4">
+                    Pasa por nuestro local a retirar tu pedido programado o a elegir pasteles y postres frescos directamente desde nuestra vitrina del día.
+                </p>
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <div class="p-3 rounded-3" style="background-color: var(--color-crema);">
+                            <h3 class="h6 fw-bold text-dark mb-1"><i class="bi bi-geo-alt text-primary me-1"></i> Dirección</h3>
+                            <p class="small text-muted mb-0">{{ configuracion_sitio.direccion|default:"Av. Providencia 1234, Local 5" }}, {{ configuracion_sitio.comuna|default:"Providencia" }}</p>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="p-3 rounded-3" style="background-color: var(--color-crema);">
+                            <h3 class="h6 fw-bold text-dark mb-1"><i class="bi bi-clock text-primary me-1"></i> Horarios</h3>
+                            <p class="small text-muted mb-0">{{ configuracion_sitio.horarios|default:"Lun a Sáb: 09:30 a 20:00 hrs."|truncatechars:45 }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <a href="{% url 'sitio:ubicacion' %}" class="btn btn-pasteleria px-4 py-2">
+                        <i class="bi bi-map me-1"></i> Ver Plano y Cómo Llegar
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <!-- Mapa Google Maps en Iframe -->
+                <div class="ratio ratio-16x9 rounded-4 shadow overflow-hidden border">
+                    <iframe 
+                        src="https://maps.google.com/maps?q={{ configuracion_sitio.latitud|default:'-33.4285' }},{{ configuracion_sitio.longitud|default:'-70.6123' }}&hl=es&z=15&output=embed" 
+                        title="Ubicación de Pastelería LA CREME en Google Maps" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

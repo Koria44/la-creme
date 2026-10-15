@@ -1,0 +1,91 @@
+<footer class="footer-lacreme" role="contentinfo">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Columna 1: Identidad de la Pastelería -->
+            <div class="col-lg-4 col-md-6">
+                <h3 class="footer-title">LA CREME</h3>
+                <p class="text-light opacity-75 pe-lg-3">
+                    {{ configuracion_sitio.eslogan|default:"Pastelería artesanal hecha con amor, tradición y los mejores ingredientes seleccionados. Cada receta cuenta una historia dulce." }}
+                </p>
+                <div class="mt-3">
+                    <a href="{{ configuracion_sitio.instagram|default:'https://www.instagram.com/pasteleria_la_creme/' }}" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="Síguenos en Instagram">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                    {% if configuracion_sitio.facebook %}
+                    <a href="{{ configuracion_sitio.facebook }}" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="Síguenos en Facebook">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                    {% endif %}
+                    <a href="https://wa.me/{{ configuracion_sitio.whatsapp|default:'+56987654321'|cut:'+'|cut:' '|cut:'-' }}" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="Contáctanos por WhatsApp">
+                        <i class="bi bi-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Columna 2: Categorías Populares -->
+            <div class="col-lg-2 col-md-6 col-6">
+                <h4 class="footer-title">Especialidades</h4>
+                <ul class="footer-links">
+                    {% for cat in categorias_menu|slice:":6" %}
+                    <li><a href="{{ cat.get_absolute_url }}">{{ cat.nombre }}</a></li>
+                    {% empty %}
+                    <li><a href="{% url 'catalogo:lista' %}">Tortas</a></li>
+                    <li><a href="{% url 'catalogo:lista' %}">Cheesecakes</a></li>
+                    <li><a href="{% url 'catalogo:lista' %}">Kuchen</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Columna 3: Información y Enlaces Rápidos -->
+            <div class="col-lg-2 col-md-6 col-6">
+                <h4 class="footer-title">Información</h4>
+                <ul class="footer-links">
+                    <li><a href="{% url 'sitio:nosotros' %}">Nuestra Historia</a></li>
+                    <li><a href="{% url 'sitio:ubicacion' %}">Dónde estamos</a></li>
+                    <li><a href="{% url 'sitio:preguntas_frecuentes' %}">Preguntas Frecuentes</a></li>
+                    <li><a href="{% url 'sitio:contacto' %}">Cotizaciones y Contacto</a></li>
+                    <li><a href="{% url 'sitio:terminos' %}">Términos y Condiciones</a></li>
+                    <li><a href="{% url 'sitio:privacidad' %}">Política de Privacidad</a></li>
+                </ul>
+            </div>
+
+            <!-- Columna 4: Atención y Horarios -->
+            <div class="col-lg-4 col-md-6">
+                <h4 class="footer-title">Contacto y Retiro</h4>
+                <ul class="list-unstyled text-light opacity-75 small">
+                    <li class="mb-2 d-flex align-items-start gap-2">
+                        <i class="bi bi-geo-alt-fill text-warning mt-1"></i>
+                        <span>{{ configuracion_sitio.direccion|default:"Av. Providencia 1234, Local 5" }}, {{ configuracion_sitio.comuna|default:"Providencia" }}, {{ configuracion_sitio.ciudad|default:"Santiago" }}</span>
+                    </li>
+                    <li class="mb-2 d-flex align-items-center gap-2">
+                        <i class="bi bi-clock-fill text-warning"></i>
+                        <span>{{ configuracion_sitio.horarios|default:"Lun a Sáb: 09:30 a 20:00 hrs. Dom: 10:00 a 18:00 hrs."|linebreaksbr }}</span>
+                    </li>
+                    <li class="mb-2 d-flex align-items-center gap-2">
+                        <i class="bi bi-telephone-fill text-warning"></i>
+                        <span>{{ configuracion_sitio.telefono|default:"+56 9 8765 4321" }}</span>
+                    </li>
+                    <li class="mb-2 d-flex align-items-center gap-2">
+                        <i class="bi bi-envelope-fill text-warning"></i>
+                        <span>{{ configuracion_sitio.correo|default:"contacto@pastelerialacreme.cl" }}</span>
+                    </li>
+                </ul>
+                <div class="mt-3">
+                    <a href="{% url 'sitio:ubicacion' %}" class="btn btn-sm btn-outline-light rounded-pill px-3">
+                        <i class="bi bi-map me-1"></i> Ver en Mapa y Cómo llegar
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barra Inferior de Copyright y Nota Demo -->
+        <div class="footer-bottom d-flex flex-column flex-md-row justify-content-between align-items-center text-center text-md-start">
+            <p class="mb-1 mb-md-0">
+                &copy; {% now "Y" %} <strong>LA CREME Pastelería</strong>. Todos los derechos reservados.
+            </p>
+            <p class="mb-0 text-white-50 small">
+                Demostración funcional de comercio electrónico. Datos de dirección y horarios son placeholders editables desde el panel.
+            </p>
+        </div>
+    </div>
+</footer>

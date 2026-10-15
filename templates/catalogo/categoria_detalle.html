@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}{{ categoria.nombre }} Artesanales | Catálogo LA CREME{% endblock %}
+{% block meta_description %}{{ categoria.descripcion|default:"Descubre nuestra selección artesanal de pastelería fina."|truncatechars:155 }}{% endblock %}
+
+{% block contenido %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-lacreme">
+            <li class="breadcrumb-item"><a href="{% url 'sitio:inicio' %}">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'catalogo:lista' %}">Catálogo</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ categoria.nombre }}</li>
+        </ol>
+    </nav>
+
+    <!-- Banner de Categoría -->
+    <div class="card border-0 rounded-4 p-4 p-md-5 mb-5 shadow-sm text-white" style="background: linear-gradient(135deg, var(--color-chocolate) 0%, var(--color-chocolate-dark) 100%);">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <span class="badge bg-warning text-dark px-3 py-1 rounded-pill mb-2">Especialidad LA CREME</span>
+                <h1 class="display-5 font-serif text-white mb-3">{{ categoria.nombre }}</h1>
+                <p class="lead text-light opacity-90 mb-0" style="max-width: 650px;">
+                    {{ categoria.descripcion }}
+                </p>
+            </div>
+            {% if categoria.imagen %}
+            <div class="col-lg-4 d-none d-lg-block text-end">
+                <img src="{{ categoria.imagen.url }}" alt="{{ categoria.nombre }}" class="rounded-circle shadow-lg border border-3 border-warning" width="160" height="160" style="object-fit: cover;">
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Barra de Orden y Conteo -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 pb-2 border-bottom">
+        <div class="text-muted small mb-2 mb-md-0">
+            Mostrando <strong>{{ productos|length }}</strong> variedades en <strong>{{ categoria.nombre }}</strong>
+        </div>
+        <form method="get" class="d-flex align-items-center gap-2">
+            <label for="orden-cat" class="small fw-bold text-muted text-nowrap mb-0">Ordenar:</label>
+            <select name="orden" id="orden-cat" class="form-select form-select-sm" onchange="this.form.submit()">
+                <option value="destacados" {% if orden_actual == 'destacados' %}selected{% endif %}>Destacados</option>
+                <option value="precio_asc" {% if orden_actual == 'precio_asc' %}selected{% endif %}>Precio: Menor a Mayor</option>
+                <option value="precio_desc" {% if orden_actual == 'precio_desc' %}selected{% endif %}>Precio: Mayor a Menor</option>
+                <option value="nombre_asc" {% if orden_actual == 'nombre_asc' %}selected{% endif %}>Nombre: A - Z</option>
+                <option value="novedades" {% if orden_actual == 'novedades' %}selected{% endif %}>Novedades</option>
+            </select>
+        </form>
+    </div>
+
+    <!-- Grilla de Productos -->
+    {% if productos %}
+        <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-lg-3">
+            {% for producto in productos %}
+            <div class="col">
+                {% include "includes/_tarjeta_producto.html" with producto=producto %}
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5 bg-white rounded-4 border">
+            <p class="text-muted mb-3">Pronto agregaremos nuevas variedades a esta categoría.</p>
+            <a href="{% url 'catalogo:lista' %}" class="btn btn-pasteleria px-4">Ver otros productos</a>
+        </div>
+    {% endif %}
+
+    <!-- Otras Categorías para Enlazado Interno SEO -->
+    {% if otras_categorias %}
+    <div class="mt-5 pt-4 border-top">
+        <h2 class="h5 font-serif mb-3">Explora otras categorías de pastelería</h2>
+        <div class="d-flex flex-wrap gap-2">
+            {% for otra in otras_categorias %}
+                <a href="{{ otra.get_absolute_url }}" class="btn btn-outline-secondary btn-sm rounded-pill px-3 py-2">
+                    {{ otra.nombre }}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

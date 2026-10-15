@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Términos y Condiciones | LA CREME Pastelería{% endblock %}
+{% block meta_description %}Revisa los términos y condiciones de compra, pedidos anticipados, cancelaciones y políticas de despacho de LA CREME Pastelería.{% endblock %}
+
+{% block contenido %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-lacreme">
+            <li class="breadcrumb-item"><a href="{% url 'sitio:inicio' %}">Inicio</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Términos y Condiciones</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="p-4 p-md-5 bg-white rounded-4 border shadow-sm">
+                <h1 class="display-6 font-serif mb-4">Términos y Condiciones de Servicio</h1>
+                <p class="text-muted small">Última actualización: Octubre de 2026</p>
+                <hr class="my-4">
+
+                <h2 class="h5 fw-bold text-dark mt-4">1. Generalidades</h2>
+                <p class="text-muted">
+                    Bienvenido a LA CREME Pastelería. Al acceder y realizar compras a través de nuestro sitio web, aceptas los presentes Términos y Condiciones. Todos los precios están expresados en pesos chilenos (CLP) e incluyen el Impuesto al Valor Agregado (IVA).
+                </p>
+
+                <h2 class="h5 fw-bold text-dark mt-4">2. Horarios y Anticipación de Pedidos</h2>
+                <p class="text-muted">
+                    Debido a que nuestros productos son artesanales y horneados frescos, los pedidos requieren el tiempo de anticipación indicado en cada ficha de producto (generalmente entre 24 y 48 horas). Para fechas festivas (Día de la Madre, Navidad, San Valentín) recomendamos realizar los pedidos con al menos 5 días de antelación.
+                </p>
+
+                <h2 class="h5 fw-bold text-dark mt-4">3. Modalidades de Entrega y Despacho</h2>
+                <p class="text-muted">
+                    Ofrecemos dos modalidades: retiro presencial en nuestra tienda física en Providencia sin costo adicional, o despacho a domicilio en las comunas habilitadas. El cliente es responsable de indicar una dirección exacta y un número telefónico de contacto activo. En caso de no haber moradores en el domicilio en el rango horario acordado, el pedido retornará a nuestro local para su retiro.
+                </p>
+
+                <h2 class="h5 fw-bold text-dark mt-4">4. Políticas de Modificación y Cancelación</h2>
+                <p class="text-muted">
+                    Las modificaciones de fecha o sabor de tortas de catálogo deben solicitarse con un mínimo de 24 horas antes de la entrega acordada. Por tratarse de productos alimenticios perecibles preparados a pedido, no se admiten cancelaciones con menos de 24 horas de anticipación.
+                </p>
+
+                <h2 class="h5 fw-bold text-dark mt-4">5. Garantía de Calidad</h2>
+                <p class="text-muted">
+                    En LA CREME garantizamos la máxima frescura e higiene en todas nuestras elaboraciones. Ante cualquier disconformidad con el estado del producto al momento de la entrega, te solicitamos contactarnos de inmediato por WhatsApp o correo adjuntando fotografías para brindarte una solución prioritaria.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

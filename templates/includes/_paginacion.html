@@ -1,0 +1,43 @@
+{% if is_paginated %}
+<nav aria-label="Navegación de páginas" class="mt-4 mb-5">
+    <ul class="pagination justify-content-center flex-wrap">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link rounded-pill me-1" href="?page=1{% if query_actual %}&q={{ query_actual }}{% endif %}{% if categoria_actual %}&categoria={{ categoria_actual }}{% endif %}{% if orden_actual %}&orden={{ orden_actual }}{% endif %}{% if precio_min_actual %}&precio_min={{ precio_min_actual }}{% endif %}{% if precio_max_actual %}&precio_max={{ precio_max_actual }}{% endif %}" aria-label="Primera página">
+                <i class="bi bi-chevron-double-left"></i>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link rounded-pill me-2" href="?page={{ page_obj.previous_page_number }}{% if query_actual %}&q={{ query_actual }}{% endif %}{% if categoria_actual %}&categoria={{ categoria_actual }}{% endif %}{% if orden_actual %}&orden={{ orden_actual }}{% endif %}{% if precio_min_actual %}&precio_min={{ precio_min_actual }}{% endif %}{% if precio_max_actual %}&precio_max={{ precio_max_actual }}{% endif %}" aria-label="Anterior">
+                <i class="bi bi-chevron-left"></i> Anterior
+            </a>
+        </li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <li class="page-item active" aria-current="page">
+                    <span class="page-link rounded-pill mx-1 fw-bold">{{ num }}</span>
+                </li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <li class="page-item">
+                    <a class="page-link rounded-pill mx-1" href="?page={{ num }}{% if query_actual %}&q={{ query_actual }}{% endif %}{% if categoria_actual %}&categoria={{ categoria_actual }}{% endif %}{% if orden_actual %}&orden={{ orden_actual }}{% endif %}{% if precio_min_actual %}&precio_min={{ precio_min_actual }}{% endif %}{% if precio_max_actual %}&precio_max={{ precio_max_actual }}{% endif %}">{{ num }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link rounded-pill ms-2" href="?page={{ page_obj.next_page_number }}{% if query_actual %}&q={{ query_actual }}{% endif %}{% if categoria_actual %}&categoria={{ categoria_actual }}{% endif %}{% if orden_actual %}&orden={{ orden_actual }}{% endif %}{% if precio_min_actual %}&precio_min={{ precio_min_actual }}{% endif %}{% if precio_max_actual %}&precio_max={{ precio_max_actual }}{% endif %}" aria-label="Siguiente">
+                Siguiente <i class="bi bi-chevron-right"></i>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link rounded-pill ms-1" href="?page={{ page_obj.paginator.num_pages }}{% if query_actual %}&q={{ query_actual }}{% endif %}{% if categoria_actual %}&categoria={{ categoria_actual }}{% endif %}{% if orden_actual %}&orden={{ orden_actual }}{% endif %}{% if precio_min_actual %}&precio_min={{ precio_min_actual }}{% endif %}{% if precio_max_actual %}&precio_max={{ precio_max_actual }}{% endif %}" aria-label="Última página">
+                <i class="bi bi-chevron-double-right"></i>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}

@@ -1,0 +1,749 @@
+/* ==========================================================================
+   LA CREME - Pastelería Artesanal
+   Sistema de Diseño y Estilos Principales
+   ========================================================================== */
+
+:root {
+    /* Paleta de Color Institucional */
+    --color-crema: #FFF8F0;
+    --color-crema-suave: #FDF4E9;
+    --color-chocolate: #4A2C2A;
+    --color-chocolate-dark: #2F1A19;
+    --color-chocolate-light: #6A4441;
+    --color-frambuesa: #B83A5C;
+    --color-frambuesa-hover: #9E2D4B;
+    --color-dorado: #D9A441;
+    --color-dorado-light: #F4CE7E;
+    --color-menta: #8FBFA8;
+    --color-menta-light: #E7F3ED;
+
+    --color-texto: #2D1E1E;
+    --color-texto-muted: #6B5B57;
+    --color-borde: #EADBCE;
+    --color-fondo-tarjeta: #FFFFFF;
+    --color-fondo-alt: #FBF4EB;
+
+    /* Tipografías */
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-sans: 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+    /* Sombras & Radios */
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-pill: 50px;
+
+    --sombra-suave: 0 4px 15px rgba(74, 44, 42, 0.06);
+    --sombra-media: 0 10px 30px rgba(74, 44, 42, 0.10);
+    --sombra-flotante: 0 16px 45px rgba(74, 44, 42, 0.16);
+
+    --transicion: all 0.25s ease-in-out;
+}
+
+/* Reset y base */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-sans);
+    color: var(--color-texto);
+    background-color: var(--color-crema);
+    line-height: 1.6;
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main#contenido-principal {
+    flex: 1 0 auto;
+}
+
+/* Enlace de accesibilidad para saltar al contenido */
+.skip-link {
+    position: absolute;
+    top: -50px;
+    left: 20px;
+    background: var(--color-frambuesa);
+    color: #fff;
+    padding: 10px 18px;
+    z-index: 9999;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-weight: 700;
+    transition: top 0.2s ease;
+}
+.skip-link:focus {
+    top: 15px;
+}
+
+/* Tipografía */
+h1, h2, h3, h4, h5, h6, .font-serif {
+    font-family: var(--font-serif);
+    color: var(--color-chocolate);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+p {
+    margin-bottom: 1rem;
+}
+
+a {
+    color: var(--color-frambuesa);
+    text-decoration: none;
+    transition: var(--transicion);
+}
+a:hover {
+    color: var(--color-frambuesa-hover);
+}
+
+/* Botones con estilo pastelería */
+.btn-pasteleria {
+    background-color: var(--color-frambuesa);
+    color: #FFFFFF !important;
+    font-family: var(--font-sans);
+    font-weight: 700;
+    padding: 0.65rem 1.6rem;
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--color-frambuesa);
+    box-shadow: 0 4px 14px rgba(184, 58, 92, 0.25);
+    transition: var(--transicion);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+.btn-pasteleria:hover {
+    background-color: var(--color-frambuesa-hover);
+    border-color: var(--color-frambuesa-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(184, 58, 92, 0.35);
+}
+
+.btn-pasteleria-outline {
+    background-color: transparent;
+    color: var(--color-chocolate) !important;
+    font-weight: 700;
+    padding: 0.65rem 1.6rem;
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--color-chocolate);
+    transition: var(--transicion);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+.btn-pasteleria-outline:hover {
+    background-color: var(--color-chocolate);
+    color: #FFFFFF !important;
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-suave);
+}
+
+.btn-pasteleria-dorado {
+    background-color: var(--color-dorado);
+    color: var(--color-chocolate-dark) !important;
+    font-weight: 700;
+    padding: 0.65rem 1.6rem;
+    border-radius: var(--radius-pill);
+    border: 2px solid var(--color-dorado);
+    box-shadow: 0 4px 14px rgba(217, 164, 65, 0.3);
+    transition: var(--transicion);
+}
+.btn-pasteleria-dorado:hover {
+    background-color: #c79232;
+    border-color: #c79232;
+    transform: translateY(-2px);
+}
+
+.btn-whatsapp {
+    background-color: #25D366;
+    color: #FFFFFF !important;
+    font-weight: 700;
+    border-radius: var(--radius-pill);
+    padding: 0.65rem 1.5rem;
+    border: none;
+    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--transicion);
+}
+.btn-whatsapp:hover {
+    background-color: #1EBE5D;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(37, 211, 102, 0.4);
+}
+
+/* Barra superior de anuncios */
+.top-bar {
+    background-color: var(--color-chocolate-dark);
+    color: var(--color-crema);
+    font-size: 0.85rem;
+    padding: 0.4rem 0;
+}
+.top-bar a {
+    color: var(--color-dorado-light);
+}
+.top-bar a:hover {
+    color: #FFFFFF;
+}
+
+/* Navbar */
+.navbar-lacreme {
+    background-color: #FFFFFF;
+    box-shadow: var(--sombra-suave);
+    border-bottom: 2px solid var(--color-crema-suave);
+    padding: 0.8rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1030;
+}
+.navbar-brand-text {
+    font-family: var(--font-serif);
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--color-chocolate);
+    letter-spacing: 0.04em;
+    line-height: 1;
+}
+.navbar-brand-subtitle {
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-frambuesa);
+    font-weight: 700;
+    display: block;
+    margin-top: 2px;
+}
+
+.navbar-nav .nav-link {
+    font-weight: 600;
+    color: var(--color-chocolate);
+    padding: 0.5rem 0.9rem;
+    border-radius: var(--radius-sm);
+    transition: var(--transicion);
+}
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+    color: var(--color-frambuesa);
+    background-color: var(--color-crema-suave);
+}
+
+/* Buscador Navbar */
+.search-form-nav {
+    position: relative;
+    max-width: 260px;
+}
+.search-form-nav input {
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--color-borde);
+    padding-left: 2.2rem;
+    font-size: 0.88rem;
+    background-color: var(--color-crema);
+}
+.search-form-nav input:focus {
+    background-color: #fff;
+    border-color: var(--color-frambuesa);
+    box-shadow: 0 0 0 0.2rem rgba(184, 58, 92, 0.15);
+}
+.search-form-nav .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-texto-muted);
+    font-size: 0.9rem;
+}
+
+/* Badge Carrito Flotante */
+.cart-badge-icon {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: var(--color-crema-suave);
+    color: var(--color-chocolate);
+    font-size: 1.25rem;
+    transition: var(--transicion);
+}
+.cart-badge-icon:hover {
+    background-color: var(--color-frambuesa);
+    color: #FFFFFF;
+}
+.cart-count-pill {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background-color: var(--color-frambuesa);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: var(--radius-pill);
+    border: 2px solid #FFFFFF;
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Hero Banner */
+.hero-lacreme {
+    background: linear-gradient(135deg, #4A2C2A 0%, #2F1A19 100%);
+    color: #FFFFFF;
+    padding: 4.5rem 0;
+    position: relative;
+    overflow: hidden;
+}
+.hero-lacreme::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(217, 164, 65, 0.18) 0%, rgba(217, 164, 65, 0) 70%);
+    pointer-events: none;
+}
+.hero-title {
+    color: var(--color-crema);
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    line-height: 1.15;
+    margin-bottom: 1.2rem;
+}
+.hero-title span {
+    color: var(--color-dorado-light);
+    font-style: italic;
+}
+.hero-lead {
+    font-size: 1.15rem;
+    color: #E6D8D2;
+    margin-bottom: 2rem;
+    max-width: 580px;
+}
+.hero-badge {
+    display: inline-block;
+    background: rgba(217, 164, 65, 0.2);
+    border: 1px solid var(--color-dorado);
+    color: var(--color-dorado-light);
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 0.35rem 1rem;
+    border-radius: var(--radius-pill);
+    margin-bottom: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* Tarjetas de Producto */
+.card-producto {
+    background-color: var(--color-fondo-tarjeta);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-borde);
+    box-shadow: var(--sombra-suave);
+    transition: var(--transicion);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+.card-producto:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--sombra-media);
+    border-color: var(--color-dorado);
+}
+.card-producto .img-container {
+    position: relative;
+    width: 100%;
+    padding-top: 75%; /* Ratio 4:3 */
+    overflow: hidden;
+    background-color: var(--color-crema-suave);
+}
+.card-producto .img-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+.card-producto:hover .img-container img {
+    transform: scale(1.06);
+}
+
+.badge-descuento {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background-color: var(--color-frambuesa);
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.78rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-pill);
+    box-shadow: 0 2px 8px rgba(184, 58, 92, 0.35);
+    z-index: 2;
+}
+
+.badge-agotado {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background-color: #6c757d;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-pill);
+    z-index: 2;
+}
+
+.badge-stock-bajo {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background-color: var(--color-dorado);
+    color: var(--color-chocolate-dark);
+    font-weight: 700;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-pill);
+    z-index: 2;
+}
+
+.card-producto .card-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+.card-producto .categoria-tag {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    color: var(--color-frambuesa);
+    margin-bottom: 0.35rem;
+    display: block;
+}
+.card-producto .producto-titulo {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-chocolate);
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+}
+.card-producto .producto-desc {
+    font-size: 0.88rem;
+    color: var(--color-texto-muted);
+    line-height: 1.45;
+    flex-grow: 1;
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.precio-normal {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--color-chocolate);
+}
+.precio-anterior {
+    font-size: 0.9rem;
+    text-decoration: line-through;
+    color: var(--color-texto-muted);
+    margin-left: 0.4rem;
+}
+.precio-oferta {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--color-frambuesa);
+}
+
+/* Tarjeta de Categoría */
+.card-categoria {
+    background-color: #FFFFFF;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-borde);
+    padding: 1.25rem;
+    text-align: center;
+    transition: var(--transicion);
+    display: block;
+    color: inherit;
+    box-shadow: var(--sombra-suave);
+    height: 100%;
+}
+.card-categoria:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--sombra-media);
+    border-color: var(--color-frambuesa);
+    color: inherit;
+}
+.categoria-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    margin: 0 auto 0.9rem auto;
+    overflow: hidden;
+    border: 3px solid var(--color-crema);
+    box-shadow: var(--sombra-suave);
+}
+.categoria-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Pasos cómo hacer tu pedido */
+.paso-box {
+    background: #FFFFFF;
+    border-radius: var(--radius-md);
+    padding: 2rem 1.5rem;
+    border: 1px solid var(--color-borde);
+    box-shadow: var(--sombra-suave);
+    height: 100%;
+    position: relative;
+    transition: var(--transicion);
+}
+.paso-box:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--sombra-media);
+}
+.paso-numero {
+    width: 48px;
+    height: 48px;
+    background: var(--color-crema-suave);
+    color: var(--color-frambuesa);
+    border: 2px solid var(--color-frambuesa);
+    font-weight: 800;
+    font-size: 1.2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.2rem;
+}
+
+/* Breadcrumbs */
+.breadcrumb-lacreme {
+    background-color: transparent;
+    padding: 0.75rem 0;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+.breadcrumb-lacreme a {
+    color: var(--color-chocolate-light);
+}
+.breadcrumb-lacreme .active {
+    color: var(--color-frambuesa);
+    font-weight: 600;
+}
+
+/* Ficha de producto detalle */
+.ficha-producto-img {
+    border-radius: var(--radius-lg);
+    box-shadow: var(--sombra-media);
+    overflow: hidden;
+    border: 1px solid var(--color-borde);
+    background: #fff;
+}
+.ficha-meta-badge {
+    background-color: var(--color-crema-suave);
+    border: 1px solid var(--color-borde);
+    color: var(--color-chocolate);
+    padding: 0.5rem 0.9rem;
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Tabla del Carrito */
+.tabla-carrito {
+    background: #FFFFFF;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--color-borde);
+    box-shadow: var(--sombra-suave);
+}
+.tabla-carrito th {
+    background-color: var(--color-crema-suave);
+    color: var(--color-chocolate);
+    font-weight: 700;
+    border-bottom: 2px solid var(--color-borde);
+}
+.cart-thumb {
+    width: 70px;
+    height: 70px;
+    border-radius: var(--radius-sm);
+    object-fit: cover;
+}
+
+/* Resumen del Pedido */
+.card-resumen {
+    background-color: #FFFFFF;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-borde);
+    box-shadow: var(--sombra-suave);
+    padding: 1.5rem;
+}
+
+/* Footer */
+.footer-lacreme {
+    background-color: var(--color-chocolate);
+    color: var(--color-crema);
+    padding: 3.5rem 0 1.5rem 0;
+    margin-top: 4rem;
+    border-top: 4px solid var(--color-dorado);
+}
+.footer-title {
+    color: #FFFFFF;
+    font-size: 1.25rem;
+    margin-bottom: 1.2rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+.footer-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background-color: var(--color-dorado);
+}
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.footer-links li {
+    margin-bottom: 0.6rem;
+}
+.footer-links a {
+    color: #E2D3CD;
+    transition: var(--transicion);
+}
+.footer-links a:hover {
+    color: var(--color-dorado-light);
+    padding-left: 4px;
+}
+.footer-social-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-crema);
+    font-size: 1.1rem;
+    transition: var(--transicion);
+    margin-right: 0.5rem;
+}
+.footer-social-icon:hover {
+    background: var(--color-dorado);
+    color: var(--color-chocolate);
+    transform: translateY(-2px);
+}
+.footer-bottom {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1.5rem;
+    margin-top: 2.5rem;
+    font-size: 0.85rem;
+    color: #BBA9A1;
+}
+
+/* Toast Container Flotante */
+.toast-container-lacreme {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 1090;
+}
+
+/* Panel de Administración Propio */
+.panel-sidebar {
+    background-color: var(--color-chocolate-dark);
+    min-height: calc(100vh - 70px);
+    color: #fff;
+    padding: 1.5rem 1rem;
+}
+.panel-sidebar .nav-link {
+    color: #DAC9C2;
+    padding: 0.65rem 1rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+.panel-sidebar .nav-link:hover,
+.panel-sidebar .nav-link.active {
+    background-color: var(--color-frambuesa);
+    color: #fff;
+}
+.kpi-card {
+    background: #fff;
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    border: 1px solid var(--color-borde);
+    box-shadow: var(--sombra-suave);
+    position: relative;
+    overflow: hidden;
+}
+.kpi-card .kpi-icon {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    font-size: 2.2rem;
+    opacity: 0.15;
+    color: var(--color-chocolate);
+}
+.kpi-card .kpi-val {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--color-chocolate);
+    line-height: 1.2;
+}
+
+/* Responsividad Mobile-First */
+@media (max-width: 767.98px) {
+    .hero-lacreme {
+        padding: 3rem 0;
+        text-align: center;
+    }
+    .hero-lead {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .search-form-nav {
+        max-width: 100%;
+        margin: 0.8rem 0;
+    }
+    .footer-title::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .footer-lacreme {
+        text-align: center;
+    }
+}

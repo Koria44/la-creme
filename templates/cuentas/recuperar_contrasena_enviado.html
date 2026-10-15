@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Correo Enviado | LA CREME Pastelería{% endblock %}
+{% block meta_description %}Revisa tu bandeja de entrada para restablecer tu contraseña.{% endblock %}
+
+{% block contenido %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5 text-center">
+            <div class="card p-4 p-md-5 rounded-4 border-0 shadow-sm bg-white">
+                <div class="display-3 text-warning mb-3">
+                    <i class="bi bi-envelope-check"></i>
+                </div>
+                <h1 class="h4 font-serif mb-3">Revisa tu correo electrónico</h1>
+                <p class="text-muted small mb-4">
+                    Si el correo ingresado coincide con una cuenta activa, te hemos enviado las instrucciones y el enlace para restablecer tu contraseña.
+                </p>
+                <div class="alert alert-light border small text-muted text-start mb-4">
+                    <i class="bi bi-info-circle me-1"></i> En este entorno de demostración, el correo se emite en la consola del servidor.
+                </div>
+                <a href="{% url 'cuentas:ingresar' %}" class="btn btn-pasteleria py-2 px-4">
+                    Volver a Iniciar Sesión
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
